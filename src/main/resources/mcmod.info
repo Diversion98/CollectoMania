@@ -1,0 +1,13 @@
+[
+  {
+    "modid": "collectomania",
+    "name": "Collectomania",
+    "description": "Collect everything!",
+    "version": "0.1",
+    "mcversion": "${mcversion}",
+    "authorList": [
+      "rlDiversion",
+      "Toby109tt"
+    ]
+  }
+]
