@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 )
 public class Main {
     /**
-     * This is the instance of your mod as created by Forge. It will never be null.
+     * This is the instance of your mod as created by Forge. It will never be null. test
      */
     @Mod.Instance
     public static Main INSTANCE;
