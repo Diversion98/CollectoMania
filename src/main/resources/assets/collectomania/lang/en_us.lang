@@ -1,1 +1,6 @@
-item.bug_beetle.name=Beetle
+tile.bug_beetle.name=Beetle
+tile.research_table.name=Research Table
+
+item.tool_bugnet.name=Bugnet
+
+itemGroup.collectomania=Collectomania

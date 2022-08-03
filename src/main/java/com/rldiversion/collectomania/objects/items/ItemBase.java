@@ -7,15 +7,16 @@ import com.rldiversion.collectomania.init.ItemInit;
 import com.rldiversion.collectomania.util.IHasModel;
 
 public class ItemBase extends Item implements IHasModel {
-    public ItemBase(String name) {
+    public ItemBase(String name, CreativeTabs tab) {
         setTranslationKey(name);
         setRegistryName(name);
-        setCreativeTab(CreativeTabs.MATERIALS);
+        setCreativeTab(tab);
 
         ItemInit.ITEMS.add(this);
     }
 
-    public void registerModels() {
+    public void registerModels()
+    {
         Main.proxy.registerItemRenderer(this, 0, "inventory");
     }
 }

@@ -1,0 +1,13 @@
+{
+  "variants":
+  {
+    "facing=north,researching=false": {"model":  "collectomania:research_table"},
+    "facing=east,researching=false": {"model":  "collectomania:research_table", "y":  90 },
+    "facing=south,researching=false": {"model":  "collectomania:research_table", "y":  180 },
+    "facing=west,researching=false": {"model":  "collectomania:research_table", "y":  270 },
+    "facing=north,researching=true": {"model":  "collectomania:research_table"},
+    "facing=east,researching=true": {"model":  "collectomania:research_table", "y":  90 },
+    "facing=south,researching=true": {"model":  "collectomania:research_table", "y":  180 },
+    "facing=west,researching=true": {"model":  "collectomania:research_table", "y":  270 }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "collectomania:items/tool_bugnet"
+  }
+}
