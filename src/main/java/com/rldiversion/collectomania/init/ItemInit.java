@@ -14,9 +14,6 @@ public class ItemInit {
 
     public static final Item.ToolMaterial TOOL_BUGNET = EnumHelper.addToolMaterial("tool_net", 0, 59, 2.0F, 0.0F, 15);
 
-    //items
-    //public static final Item BUG_BEETLE = new ItemBase("bug_beetle");
-
     //tools
     public static final Item BUGNET = new ToolNet("tool_bugnet", TOOL_BUGNET, Main.COLLECTOMANIA);
 }

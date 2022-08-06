@@ -1,8 +1,8 @@
 {
 	"parent": "block/block",
 	"textures": {
-		"0": "collectomania:blocks/bug_beetle",
-		"particle": "collectomania:blocks/bug_beetle"
+		"0": "collectomania:blocks/bug_redback_spider",
+		"particle": "collectomania:blocks/bug_redback_spider"
 	},
 	"elements": [
 		{

@@ -30,12 +30,6 @@ public class Block3DModelBase extends BlockBase
     }
 
     @Override
-    public boolean isTranslucent(IBlockState state)
-    {
-        return true;
-    }
-
-    @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
         return MODEL_AABB;

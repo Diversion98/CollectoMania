@@ -7,6 +7,6 @@
     "south": "collectomania:blocks/research_table_side",
     "west": "collectomania:blocks/research_table_side",
     "up": "collectomania:blocks/research_table_top",
-    "down": "collectomania:blocks/research_table_top"
+    "down": "collectomania:blocks/research_table_bottom"
   }
 }
