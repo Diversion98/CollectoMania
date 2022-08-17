@@ -19,12 +19,12 @@ public class custom_model extends ModelBase {
 		textureHeight = 32;
 
 		elytra_L = new ModelRenderer(this);
-		elytra_L.setRotationPoint(-2.1F, 21.0F, 0.0F);
-		elytra_L.cubeList.add(new ModelBox(elytra_L, 0, 11, 2.2F, -2.25F, -1.0F, 3, 3, 7, 0.1F, true));
+		elytra_L.setRotationPoint(1.9F, 20.0F, 0.0F);
+		elytra_L.cubeList.add(new ModelBox(elytra_L, 0, 11, -1.8F, -2.0F, -1.0F, 4, 4, 7, 0.1F, true));
 
 		elytra_R = new ModelRenderer(this);
-		elytra_R.setRotationPoint(2.1F, 21.0F, 0.0F);
-		elytra_R.cubeList.add(new ModelBox(elytra_R, 0, 11, -5.2F, -2.25F, -1.0F, 3, 3, 7, 0.1F, false));
+		elytra_R.setRotationPoint(-1.9F, 20.0F, -1.0F);
+		elytra_R.cubeList.add(new ModelBox(elytra_R, 0, 11, -2.2F, -2.0F, 0.0F, 4, 4, 7, 0.1F, false));
 
 		bone = new ModelRenderer(this);
 		bone.setRotationPoint(4.8003F, 24.5F, -1.0F);
