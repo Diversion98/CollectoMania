@@ -15,6 +15,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
+import java.io.File;
+
 @Mod(
         modid = Reference.MODID,
         name = Reference.NAME,
@@ -31,7 +33,7 @@ public class Main {
     public static CommonProxy proxy;
 
     public static final CreativeTabs COLLECTOMANIA = new CollectomaniaTab();
-
+    public static File config;
     static { FluidRegistry.enableUniversalBucket(); }
 
     @EventHandler

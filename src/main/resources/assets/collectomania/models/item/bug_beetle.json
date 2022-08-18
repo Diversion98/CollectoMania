@@ -1,3 +1,6 @@
 {
-  "parent": "collectomania:block/bug_beetle"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "collectomania:items/bug_beetle"
+  }
 }

@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern":
+    [
+        "sss",
+        " i ",
+        "i  "
+    ],
+
+    "key":
+    {
+        "i":
+        {
+            "item": "minecraft:stick"
+        },
+        "s":
+        {
+            "item": "minecraft:string"
+        }
+    },
+
+    "result":
+    {
+        "item": "collectomania:tool_brush"
+    }
+}

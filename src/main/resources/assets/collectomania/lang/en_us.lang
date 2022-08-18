@@ -1,4 +1,6 @@
-tile.bug_beetle.name=Beetle
+//blocks
+tile.research_table.name=Research Table
+
 tile.bug_ant.name=Ant
 tile.bug_bumble_bee.name=Bumble Bee
 tile.bug_butterfly_red_admiral.name= Red Admiral Butterfly
@@ -12,8 +14,17 @@ tile.bug_tarantula_blue.name=Blue Tarantula
 tile.bug_tarantula_orange.name=Orange Tarantula
 tile.bug_worm.name=Worm
 
-tile.research_table.name=Research Table
-
+//items
 item.tool_bugnet.name=Bugnet
+item.tool_brush.name=Brush
+item.tool_fossil_brush.name=Fossil Brush
+teim.bug_beetle.name=Beetle
 
+//creative tabs
 itemGroup.collectomania=Collectomania
+
+//Containers
+container.research_table=Research Table
+
+//Entities
+entity.beetle.name=Beetle

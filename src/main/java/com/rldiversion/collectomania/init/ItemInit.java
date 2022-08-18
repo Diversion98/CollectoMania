@@ -13,7 +13,15 @@ public class ItemInit {
     public static final List<Item> ITEMS = new ArrayList<Item>();
 
     public static final Item.ToolMaterial TOOL_BUGNET = EnumHelper.addToolMaterial("tool_net", 0, 59, 2.0F, 0.0F, 15);
+    public static final Item.ToolMaterial TOOL_BRUSH = EnumHelper.addToolMaterial("tool_net", 0, 59, 2.0F, 0.0F, 15);
+    public static final Item.ToolMaterial TOOL_FOSSIL_BRUSH = EnumHelper.addToolMaterial("tool_net", 0, 59, 2.0F, 0.0F, 15);
 
     //tools
     public static final Item BUGNET = new ToolNet("tool_bugnet", TOOL_BUGNET, Main.COLLECTOMANIA);
+    public static final Item BRUSH = new ToolNet("tool_brush", TOOL_BRUSH, Main.COLLECTOMANIA);
+    public static final Item FOSSIL_BRUSH = new ToolNet("tool_fossil_brush", TOOL_FOSSIL_BRUSH, Main.COLLECTOMANIA);
+
+    //bugs
+    public static final Item BUG_BEETLE = new ItemBase("bug_beetle", Main.COLLECTOMANIA);
+
 }

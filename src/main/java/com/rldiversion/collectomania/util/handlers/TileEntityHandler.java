@@ -1,6 +1,6 @@
 package com.rldiversion.collectomania.util.handlers;
 
-import com.rldiversion.collectomania.objects.tileentities.TileEntityResearchTable;
+import com.rldiversion.collectomania.objects.blocks.tileentities.TileEntityResearchTable;
 import com.rldiversion.collectomania.util.Reference;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;

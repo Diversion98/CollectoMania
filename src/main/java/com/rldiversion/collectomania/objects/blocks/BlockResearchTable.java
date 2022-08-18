@@ -2,10 +2,10 @@ package com.rldiversion.collectomania.objects.blocks;
 
 import com.rldiversion.collectomania.Main;
 import com.rldiversion.collectomania.init.BlockInit;
-import com.rldiversion.collectomania.objects.tileentities.TileEntityResearchTable;
+import com.rldiversion.collectomania.objects.blocks.tileentities.TileEntityResearchTable;
+import com.rldiversion.collectomania.util.ModConfiguration;
 import com.rldiversion.collectomania.util.Reference;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -15,8 +15,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -54,7 +52,7 @@ public class BlockResearchTable extends BlockBase
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(!worldIn.isRemote)
         {
-            playerIn.openGui(Main.instance, Reference.GUI_RESEARCH_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.openGui(Main.instance, ModConfiguration.GUI_RESEARCH_TABLE_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;

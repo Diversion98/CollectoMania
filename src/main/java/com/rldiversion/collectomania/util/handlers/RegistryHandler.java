@@ -1,8 +1,11 @@
 package com.rldiversion.collectomania.util.handlers;
 
+import com.rldiversion.collectomania.Main;
 import com.rldiversion.collectomania.init.BlockInit;
+import com.rldiversion.collectomania.init.EntityInit;
 import com.rldiversion.collectomania.init.ItemInit;
 import com.rldiversion.collectomania.util.IHasModel;
+import com.rldiversion.collectomania.util.ModConfiguration;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
@@ -51,10 +54,14 @@ public class RegistryHandler {
     }
 
     public static void preInitRegistries(FMLPreInitializationEvent event) {
+        ModConfiguration.registerConfig(event);
+        EntityInit.registerEntities();
+        RenderHandler.registerEntityRenders();
     }
 
     public static void initRegistries(FMLInitializationEvent event)
     {
+        NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
     }
 
     public static void postInitRegistries(FMLPostInitializationEvent event)
