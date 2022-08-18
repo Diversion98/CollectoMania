@@ -17,7 +17,8 @@ tile.bug_worm.name=Worm
 //items
 item.tool_bugnet.name=Bugnet
 item.tool_brush.name=Brush
-teim.bug_beetle.name=Beetle
+item.bug_beetle.name=Beetle
+item.bug_ladybug.name=Ladybug
 
 //creative tabs
 itemGroup.collectomania=Collectomania
