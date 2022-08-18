@@ -17,7 +17,6 @@ tile.bug_worm.name=Worm
 //items
 item.tool_bugnet.name=Bugnet
 item.tool_brush.name=Brush
-item.tool_fossil_brush.name=Fossil Brush
 teim.bug_beetle.name=Beetle
 
 //creative tabs
@@ -28,3 +27,4 @@ container.research_table=Research Table
 
 //Entities
 entity.beetle.name=Beetle
+entity.ladybug.name=Ladybug

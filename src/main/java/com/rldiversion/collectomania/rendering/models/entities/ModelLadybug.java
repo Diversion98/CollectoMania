@@ -1,7 +1,9 @@
-// Made with Blockbench 4.3.1
-// Exported for Minecraft version 1.7 - 1.12
-// Paste this class into your mod and generate all required imports
+package com.rldiversion.collectomania.rendering.models.entities;
 
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBox;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 
 public class ModelLadybug extends ModelBase {
 	private final ModelRenderer elytra_L;
