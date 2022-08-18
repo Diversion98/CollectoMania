@@ -1,7 +1,6 @@
 package com.rldiversion.collectomania.rendering;
 
 import com.rldiversion.collectomania.entity.EntityBeetle;
-import com.rldiversion.collectomania.rendering.models.entities.ModelBeetle;
 import com.rldiversion.collectomania.util.Reference;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;

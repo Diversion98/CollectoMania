@@ -3,7 +3,7 @@
 // Paste this class into your mod and generate all required imports
 
 
-public class custom_model extends ModelBase {
+public class ModelLadybug extends ModelBase {
 	private final ModelRenderer elytra_L;
 	private final ModelRenderer elytra_R;
 	private final ModelRenderer bone;
@@ -14,7 +14,7 @@ public class custom_model extends ModelBase {
 	private final ModelRenderer wing_L;
 	private final ModelRenderer bb_main;
 
-	public custom_model() {
+	public ModelLadybug() {
 		textureWidth = 32;
 		textureHeight = 32;
 
