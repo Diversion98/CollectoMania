@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "collectomania:bug_beetle"
+    },
+    "title": "Your First Bug!",
+    "description": "U catched your first bug, now go research that boi.",
+    "frame": "task",
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "firstbug": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "collectomania:bug_beetle"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
