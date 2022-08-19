@@ -15,9 +15,9 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "collectomania:bug_beetle"
-            ]
+            "item_object": {
+              "nbt": "{display:{Name:\"bug_\"}}"
+            }
           }
         ]
       }
