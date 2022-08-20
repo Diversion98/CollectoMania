@@ -4,7 +4,7 @@
       "item": "collectomania:bug_beetle"
     },
     "title": "Your First Bug!",
-    "description": "U catched your first bug, now go research that boi.",
+    "description": "You have captured your first bug, now go research that bad-boi at your nearest research table!",
     "frame": "task",
     "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
     "announce_to_chat": true
