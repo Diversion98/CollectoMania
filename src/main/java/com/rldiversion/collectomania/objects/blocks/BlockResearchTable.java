@@ -2,9 +2,9 @@ package com.rldiversion.collectomania.objects.blocks;
 
 import com.rldiversion.collectomania.Main;
 import com.rldiversion.collectomania.init.BlockInit;
+import com.rldiversion.collectomania.objects.blocks.tileentities.BlockTileEntity;
 import com.rldiversion.collectomania.objects.blocks.tileentities.TileEntityResearchTable;
 import com.rldiversion.collectomania.util.ModConfiguration;
-import com.rldiversion.collectomania.util.Reference;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -22,18 +22,24 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BlockResearchTable extends BlockBase
+public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
 {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool RESEARCHING = PropertyBool.create("researching");
 
     public BlockResearchTable(String name)
     {
-        super(name, Material.WOOD, Main.COLLECTOMANIA);
+        super(Material.WOOD, name, Main.COLLECTOMANIA);
         setSoundType(SoundType.WOOD);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(RESEARCHING, false));
+    }
+
+    @Override
+    public Class<TileEntityResearchTable> getTileEntityClass() {
+        return TileEntityResearchTable.class;
     }
 
     @Override
@@ -99,7 +105,14 @@ public class BlockResearchTable extends BlockBase
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
+    public boolean hasTileEntity()
+    {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntityResearchTable createTileEntity(World world, IBlockState state)
     {
         return new TileEntityResearchTable();
     }

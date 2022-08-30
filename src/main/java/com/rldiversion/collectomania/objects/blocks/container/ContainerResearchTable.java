@@ -56,11 +56,9 @@ public class ContainerResearchTable extends Container
     {
         super.detectAndSendChanges();
 
-        for(int i = 0; i < this.listeners.size(); ++i)
-        {
-            IContainerListener listener = (IContainerListener)this.listeners.get(i);
-
-            if(this.researchTime != this.tileentity.getField(0)) listener.sendWindowProperty(this, 0, this.tileentity.getField(0));
+        for (IContainerListener listener : this.listeners) {
+            if (this.researchTime != this.tileentity.getField(0))
+                listener.sendWindowProperty(this, 0, this.tileentity.getField(0));
         }
 
         this.researchTime = this.tileentity.getField(0);
@@ -70,21 +68,16 @@ public class ContainerResearchTable extends Container
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
 
         if(slot != null && slot.getHasStack())
         {
             ItemStack stack1 = slot.getStack();
             stack = stack1.copy();
 
-            if(index == 2)
+            if(index != 1 && index != 0)
             {
-                if(!this.mergeItemStack(stack1, 4, 40, true)) return ItemStack.EMPTY;
-                slot.onSlotChange(stack1, stack);
-            }
-            else if(index != 2 && index != 1 && index != 0)
-            {
-                Slot slot1 = (Slot)this.inventorySlots.get(index + 1);
+                Slot slot1 = this.inventorySlots.get(index + 1);
 
                 if(!ResearchTableRecipes.getInstance().getResearchResult(slot1.getStack()).isEmpty())
                 {
@@ -92,17 +85,17 @@ public class ContainerResearchTable extends Container
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(index >= 4 && index < 31)
+                    else if(index >= 3 && index < 31)
                     {
                         if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
                     }
-                    else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
+                    else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 3, 31, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
             }
-            else if(!this.mergeItemStack(stack1, 4, 40, false))
+            else if(!this.mergeItemStack(stack1, 3, 40, false))
             {
                 return ItemStack.EMPTY;
             }
