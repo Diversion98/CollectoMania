@@ -6,34 +6,17 @@ import com.google.common.collect.Sets;
 
 import com.rldiversion.collectomania.Main;
 import com.rldiversion.collectomania.entity.EntityBug;
-import com.rldiversion.collectomania.init.BlockInit;
 import com.rldiversion.collectomania.init.ItemInit;
 import com.rldiversion.collectomania.util.IHasModel;
 import net.minecraft.block.Block;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ToolNet extends ItemTool implements IHasModel
 {

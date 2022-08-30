@@ -11,8 +11,8 @@ import net.minecraft.item.ItemStack;
 
 public class ResearchTableRecipes {
     private static final ResearchTableRecipes INSTANCE = new ResearchTableRecipes();
-    private final Map<ItemStack, ItemStack> researchList = Maps.<ItemStack, ItemStack>newHashMap();
-    private final Map<ItemStack, Float> experienceList = Maps.<ItemStack, Float>newHashMap();
+    private final Map<ItemStack, ItemStack> researchList = Maps.newHashMap();
+    private final Map<ItemStack, Float> experienceList = Maps.newHashMap();
 
     public static ResearchTableRecipes getInstance()
     {
@@ -22,6 +22,7 @@ public class ResearchTableRecipes {
     private ResearchTableRecipes()
     {
         addResearchRecipe(new ItemStack(ItemInit.BUG_BEETLE), new ItemStack(BlockInit.RESEARCH_TABLE), 5.0F);
+        addResearchRecipe(new ItemStack(ItemInit.BUG_LADYBUG), new ItemStack(BlockInit.RESEARCH_TABLE), 5.0F);
     }
 
 
@@ -54,7 +55,7 @@ public class ResearchTableRecipes {
     {
         for (Entry<ItemStack, Float> entry : this.experienceList.entrySet())
         {
-            if(this.compareItemStacks(stack, (ItemStack)entry.getKey()))
+            if(this.compareItemStacks(stack, entry.getKey()))
             {
                 return ((Float)entry.getValue()).floatValue();
             }

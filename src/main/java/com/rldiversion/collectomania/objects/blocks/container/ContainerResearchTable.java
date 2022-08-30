@@ -35,7 +35,7 @@ public class ContainerResearchTable extends Container
 
         for(int x = 0; x < 9; x++)
         {
-            this.addSlotToContainer(new Slot(player, x, 8 + x * 18, 142));
+            this.addSlotToContainer(new Slot(player, x, 8 + x*18, 142));
         }
     }
 
@@ -81,21 +81,21 @@ public class ContainerResearchTable extends Container
 
                 if(!ResearchTableRecipes.getInstance().getResearchResult(slot1.getStack()).isEmpty())
                 {
-                    if(!this.mergeItemStack(stack1, 0, 2, false))
+                    if(!this.mergeItemStack(stack1, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(index >= 3 && index < 31)
+                    else if(index >= 2 && index < 31)
                     {
-                        if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
+                        if(!this.mergeItemStack(stack1, 31, 36, false)) return ItemStack.EMPTY;
                     }
-                    else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 3, 31, false))
+                    else if(index >= 31 && index < 36 && !this.mergeItemStack(stack1, 2, 31, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
             }
-            else if(!this.mergeItemStack(stack1, 3, 40, false))
+            else if(!this.mergeItemStack(stack1, 2, 36, false))
             {
                 return ItemStack.EMPTY;
             }

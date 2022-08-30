@@ -37,7 +37,7 @@ public class GUIResearchTable extends GuiContainer
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 
         int l = this.getResearchProgressScaled(24);
-        this.drawTexturedModalRect(this.guiLeft + 63, this.guiTop + 36, 176, 14, l + 1, 16);
+        this.drawTexturedModalRect(this.guiLeft + 80, this.guiTop + 35, 176, 0, l + 0, 15);//original code from harry talks: (this.guiLeft + 63, this.guiTop + 36, 176, 14, l + 1, 16)
     }
 
     private int getResearchProgressScaled(int pixels)
