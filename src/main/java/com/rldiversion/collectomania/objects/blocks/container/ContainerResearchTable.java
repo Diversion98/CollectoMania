@@ -22,7 +22,7 @@ public class ContainerResearchTable extends Container
         this.tileentity = tileentity;
         IItemHandler handler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 0, 47, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, 0, 48, 35));
         this.addSlotToContainer(new SlotItemHandler(handler, 1, 124, 35));
 
         for(int y = 0; y < 3; y++)
@@ -87,15 +87,15 @@ public class ContainerResearchTable extends Container
                     }
                     else if(index >= 2 && index < 31)
                     {
-                        if(!this.mergeItemStack(stack1, 31, 36, false)) return ItemStack.EMPTY;
+                        if(!this.mergeItemStack(stack1, 31, 38, false)) return ItemStack.EMPTY;
                     }
-                    else if(index >= 31 && index < 36 && !this.mergeItemStack(stack1, 2, 31, false))
+                    else if(index >= 31 && index < 38 && !this.mergeItemStack(stack1, 2, 31, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
             }
-            else if(!this.mergeItemStack(stack1, 2, 36, false))
+            else if(!this.mergeItemStack(stack1, 2, 38, false))
             {
                 return ItemStack.EMPTY;
             }
