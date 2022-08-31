@@ -14,13 +14,13 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerResearchTable extends Container
 {
-    private final TileEntityResearchTable tileentity;
+    private final TileEntityResearchTable tileEntity;
     private int researchTime;
 
-    public ContainerResearchTable(InventoryPlayer player, TileEntityResearchTable tileentity)
+    public ContainerResearchTable(InventoryPlayer player, TileEntityResearchTable tileEntity)
     {
-        this.tileentity = tileentity;
-        IItemHandler handler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        this.tileEntity = tileEntity;
+        IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         this.addSlotToContainer(new SlotItemHandler(handler, 0, 48, 35));
         this.addSlotToContainer(new SlotItemHandler(handler, 1, 124, 35));
@@ -42,13 +42,13 @@ public class ContainerResearchTable extends Container
     @Override
     public boolean canInteractWith(EntityPlayer playerIn)
     {
-        return this.tileentity.isUsableByPlayer(playerIn);
+        return this.tileEntity.isUsableByPlayer(playerIn);
     }
 
     @Override
     public void updateProgressBar(int id, int data)
     {
-        this.tileentity.setField(id, data);
+        this.tileEntity.setField(id, data);
     }
 
     @Override
@@ -57,11 +57,11 @@ public class ContainerResearchTable extends Container
         super.detectAndSendChanges();
 
         for (IContainerListener listener : this.listeners) {
-            if (this.researchTime != this.tileentity.getField(0))
-                listener.sendWindowProperty(this, 0, this.tileentity.getField(0));
+            if (this.researchTime != this.tileEntity.getField(0))
+                listener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
         }
 
-        this.researchTime = this.tileentity.getField(0);
+        this.researchTime = this.tileEntity.getField(0);
     }
 
     @Override
