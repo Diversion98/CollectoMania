@@ -77,25 +77,25 @@ public class ContainerResearchTable extends Container
 
             if(index != 1 && index != 0)
             {
-                Slot slot1 = this.inventorySlots.get(index + 1);
+                //Slot slot1 = this.inventorySlots.get(index + 1);
 
-                if(!ResearchTableRecipes.getInstance().getResearchResult(slot1.getStack()).isEmpty())
+                if(!ResearchTableRecipes.getInstance().getResearchResult(/*slot1.getStack()*/).isEmpty())
                 {
                     if(!this.mergeItemStack(stack1, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(index >= 2 && index < 31)
+                    else if(index < 31)
                     {
-                        if(!this.mergeItemStack(stack1, 31, 38, false)) return ItemStack.EMPTY;
+                        if(!this.mergeItemStack(stack1, 31, 37, false)) return ItemStack.EMPTY;
                     }
-                    else if(index >= 31 && index < 38 && !this.mergeItemStack(stack1, 2, 31, false))
+                    else if(index < 37 && !this.mergeItemStack(stack1, 2, 31, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
             }
-            else if(!this.mergeItemStack(stack1, 2, 38, false))
+            else if(!this.mergeItemStack(stack1, 2, 37, false))
             {
                 return ItemStack.EMPTY;
             }
