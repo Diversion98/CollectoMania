@@ -14,15 +14,15 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerResearchTable extends Container
 {
-    private final TileEntityResearchTable tileentity;
+    private final TileEntityResearchTable tileEntity;
     private int researchTime;
 
-    public ContainerResearchTable(InventoryPlayer player, TileEntityResearchTable tileentity)
+    public ContainerResearchTable(InventoryPlayer player, TileEntityResearchTable tileEntity)
     {
-        this.tileentity = tileentity;
-        IItemHandler handler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        this.tileEntity = tileEntity;
+        IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 0, 47, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, 0, 48, 35));
         this.addSlotToContainer(new SlotItemHandler(handler, 1, 124, 35));
 
         for(int y = 0; y < 3; y++)
@@ -35,20 +35,20 @@ public class ContainerResearchTable extends Container
 
         for(int x = 0; x < 9; x++)
         {
-            this.addSlotToContainer(new Slot(player, x, 8 + x * 18, 142));
+            this.addSlotToContainer(new Slot(player, x, 8 + x*18, 142));
         }
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn)
     {
-        return this.tileentity.isUsableByPlayer(playerIn);
+        return this.tileEntity.isUsableByPlayer(playerIn);
     }
 
     @Override
     public void updateProgressBar(int id, int data)
     {
-        this.tileentity.setField(id, data);
+        this.tileEntity.setField(id, data);
     }
 
     @Override
@@ -56,53 +56,46 @@ public class ContainerResearchTable extends Container
     {
         super.detectAndSendChanges();
 
-        for(int i = 0; i < this.listeners.size(); ++i)
-        {
-            IContainerListener listener = (IContainerListener)this.listeners.get(i);
-
-            if(this.researchTime != this.tileentity.getField(0)) listener.sendWindowProperty(this, 0, this.tileentity.getField(0));
+        for (IContainerListener listener : this.listeners) {
+            if (this.researchTime != this.tileEntity.getField(0))
+                listener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
         }
 
-        this.researchTime = this.tileentity.getField(0);
+        this.researchTime = this.tileEntity.getField(0);
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
 
         if(slot != null && slot.getHasStack())
         {
             ItemStack stack1 = slot.getStack();
             stack = stack1.copy();
 
-            if(index == 2)
+            if(index != 1 && index != 0)
             {
-                if(!this.mergeItemStack(stack1, 4, 40, true)) return ItemStack.EMPTY;
-                slot.onSlotChange(stack1, stack);
-            }
-            else if(index != 2 && index != 1 && index != 0)
-            {
-                Slot slot1 = (Slot)this.inventorySlots.get(index + 1);
+                //Slot slot1 = this.inventorySlots.get(index + 1);
 
-                if(!ResearchTableRecipes.getInstance().getResearchResult(slot1.getStack()).isEmpty())
+                if(!ResearchTableRecipes.getInstance().getResearchResult(/*slot1.getStack()*/).isEmpty())
                 {
-                    if(!this.mergeItemStack(stack1, 0, 2, false))
+                    if(!this.mergeItemStack(stack1, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(index >= 4 && index < 31)
+                    else if(index < 31)
                     {
-                        if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
+                        if(!this.mergeItemStack(stack1, 31, 37, false)) return ItemStack.EMPTY;
                     }
-                    else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
+                    else if(index < 37 && !this.mergeItemStack(stack1, 2, 31, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
             }
-            else if(!this.mergeItemStack(stack1, 4, 40, false))
+            else if(!this.mergeItemStack(stack1, 2, 37, false))
             {
                 return ItemStack.EMPTY;
             }

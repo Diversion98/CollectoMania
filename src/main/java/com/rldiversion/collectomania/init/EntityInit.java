@@ -14,6 +14,7 @@ public class EntityInit
 {
     public static void registerEntities()
     {
+        //registerEntity("name_of_bug", EntityName.class, Main.COLLECTOMANIA, ModConfiguration.ENTITY_NAME_ID, 50, color spawn egg 1, color spawn egg 2);
         registerEntity("beetle", EntityBeetle.class, Main.COLLECTOMANIA, ModConfiguration.ENTITY_BEETLE_ID, 50, 5059661, 000000);
         registerEntity("ladybug", EntityLadybug.class, Main.COLLECTOMANIA, ModConfiguration.ENTITY_LADYBUG_ID, 50, 16711680, 000000);
     }

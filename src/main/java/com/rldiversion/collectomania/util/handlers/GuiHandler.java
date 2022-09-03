@@ -4,7 +4,6 @@ import com.rldiversion.collectomania.objects.blocks.container.ContainerResearchT
 import com.rldiversion.collectomania.objects.blocks.guis.GUIResearchTable;
 import com.rldiversion.collectomania.objects.blocks.tileentities.TileEntityResearchTable;
 import com.rldiversion.collectomania.util.ModConfiguration;
-import com.rldiversion.collectomania.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
