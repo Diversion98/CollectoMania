@@ -12,11 +12,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nonnull;
+
 public class ContainerResearchTable extends Container
 {
     private final TileEntityResearchTable tileEntity;
     private int researchTime;
-    private int totalResearchTime;
 
     public ContainerResearchTable(InventoryPlayer player, TileEntityResearchTable tileEntity)
     {
@@ -57,29 +58,33 @@ public class ContainerResearchTable extends Container
     {
         super.detectAndSendChanges();
 
-        for (IContainerListener listener : this.listeners) {
+        for (IContainerListener listener : listeners) {
             if(this.researchTime != this.tileEntity.getField(0)) listener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
-            if(this.totalResearchTime != this.tileEntity.getField(1)) listener.sendWindowProperty(this, 1, this.tileEntity.getField(1));
         }
 
         this.researchTime = this.tileEntity.getField(0);
-        this.totalResearchTime = this.tileEntity.getField(1);
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+    public @Nonnull ItemStack transferStackInSlot(@Nonnull EntityPlayer playerIn, int slotNumber)
     {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(slotNumber);
 
         if(slot != null && slot.getHasStack())
         {
             ItemStack stack1 = slot.getStack();
             stack = stack1.copy();
 
-            if(index != 1 && index != 0)
+            if(slotNumber == 2)
             {
-                Slot slot1 = this.inventorySlots.get(index + 1);
+                if(!this.mergeItemStack(stack1, 2, 37, true)) return ItemStack.EMPTY;
+                slot.onSlotChange(stack1, stack);
+            }
+
+            if(slotNumber != 1 && slotNumber != 0)
+            {
+                Slot slot1 = this.inventorySlots.get(slotNumber + 1);
 
                 if(!ResearchTableRecipes.getInstance().getResearchResult(slot1.getStack()).isEmpty())
                 {
@@ -87,11 +92,11 @@ public class ContainerResearchTable extends Container
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(index < 31)
+                    else if(slotNumber >= 2 && slotNumber < 31)
                     {
                         if(!this.mergeItemStack(stack1, 31, 37, false)) return ItemStack.EMPTY;
                     }
-                    else if(index < 37 && !this.mergeItemStack(stack1, 2, 31, false))
+                    else if(slotNumber < 37 && !this.mergeItemStack(stack1, 2, 31, false))
                     {
                         return ItemStack.EMPTY;
                     }

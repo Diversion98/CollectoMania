@@ -87,83 +87,76 @@ public class TileEntityResearchTable extends TileEntity implements ITickable
     @Override
     public void update()
     {
-
-        //declare input to itemstack
-        ItemStack[] inputs = new ItemStack[] {handler.getStackInSlot(0)};
+        if(!world.isRemote) return;
 
         //if research started, set blockstate true and start research count with additional checks
-        if(researchTime >= 1)
-        {
+        if (researchTime > 0) {
             researchTime++;
+            System.out.println("researching " + researching.getDisplayName() + " progress: " + researchTime + "/" + totalResearchTime);
 
             //if research is done
-            if(researchTime == totalResearchTime)
-            {
-                System.out.println("Research Done");
-                //if output slot is not empty, add 1 to the stack example: if there is allready 1 bug, add another 1 instead of making a new one
-                if(handler.getStackInSlot(1).getCount() > 0)
-                {
-                    System.out.println("allready has output");
-                    handler.getStackInSlot(1).grow(1);
-                }
-                //else make a new item in output slot corresponding to the input slot research recipe
-                else
-                {
-                    System.out.println("new output: " + researching.getDisplayName());
-                    handler.insertItem(1, researching, false);
-                }
-                //reset research
-                //researching = ItemStack.EMPTY;
-                researchTime = 0;
-                BlockResearchTable.setState(false, world, pos);
-                System.out.println("Research resetted. researchTime: " + researchTime);
-            }
+            if (researchTime == totalResearchTime) finishResearch();
         }
-        //if researchTime equals 0
+        //if researchTime equals 0 and it can research, start research
+        else if (canResearch()) startResearch();
+    }
+
+    public void finishResearch()
+    {
+        System.out.println("Research Done");
+        //if output slot is not empty, add 1 to the stack example: if there is allready 1 bug in the output, add another 1 instead of making a new one
+        if(handler.getStackInSlot(1).getCount() > 0)
+        {
+            System.out.println("allready has output");
+            handler.getStackInSlot(1).grow(1);
+        }
+        //else make a new item in output slot corresponding to the input slot research recipe
         else
         {
-            //if input is not empty, set the output slot to the result of the recipe from input
-            if(canResearch())
-            {
-                ItemStack result = ResearchTableRecipes.getInstance().getResearchResult(inputs[0]);
-                //if output is not null, get the output result from the input, add 1 to researchTime so it starts the if at the start of this update method, decrease the input slot by 1
-                System.out.println("result research: " + ResearchTableRecipes.getInstance().getResearchResult(inputs[0]).getDisplayName());
-                if(!result.isEmpty())
-                {
-                    researching = result;
-                    researchTime++;
-                    BlockResearchTable.setState(true, world, pos);
-                    System.out.println("Research started, researchTime: " + researchTime);
-                    inputs[0].shrink(1);
-                    handler.setStackInSlot(0, inputs[0]);
-                }
-            }
+            System.out.println("new output: " + researching.getDisplayName());
+            handler.insertItem(1, researching, false);
         }
+        //reset research
+        researching = ItemStack.EMPTY;
+        researchTime = 0;
+        BlockResearchTable.setState(false, world, pos);
+        System.out.println("Research resetted. researchTime: " + researchTime);
+    }
+
+    public void startResearch() {
+        ItemStack input =  handler.getStackInSlot(0);
+        BlockResearchTable.setState(true, world, pos);
+        researching = ResearchTableRecipes.getInstance().getResearchResult(input);
+        researchTime++;
+        System.out.println("Research started, researchTime: " + researchTime);
+        System.out.println("Researching: " + researching.getDisplayName());
+        input.shrink(1);
+        handler.setStackInSlot(0, input);
     }
 
     private boolean canResearch()
     {
         if(!handler.getStackInSlot(0).isEmpty())
         {
-            System.out.println("has item in input: " + handler.getStackInSlot(0).getDisplayName());
+            System.out.println(this.getDisplayName().getUnformattedText() + ": has item in input: " + handler.getStackInSlot(0).getDisplayName());
             ItemStack result = ResearchTableRecipes.getInstance().getResearchResult(this.handler.getStackInSlot(0));
             if(result.isEmpty()) {
-                System.out.println("No Research Result: " + result.getDisplayName());
+                System.out.println(this.getDisplayName().getUnformattedText() + ": No Research Result: " + result.getDisplayName());
                 return false;
             }
             ItemStack output = this.handler.getStackInSlot(1);
             if(output.isEmpty()) {
-                System.out.println("output empty, can research");
+                System.out.println(this.getDisplayName().getUnformattedText() + ": output empty, can research");
                 return true;
             }
             else if(output.isItemEqual(result)) {
-                System.out.println("output not empty, can  research because of same output result");
+                System.out.println(this.getDisplayName().getUnformattedText() + ": output not empty, can  research because of same output result");
                 return true;
             }
             int res = output.getCount() + result.getCount();
             return res <= 64 && res <= output.getMaxStackSize();
         }
-        System.out.println("Input empty: " + handler.getStackInSlot(0).getDisplayName());
+        System.out.println(this.getDisplayName().getUnformattedText() + ": Input empty: " + handler.getStackInSlot(0).getDisplayName());
         return false;
     }
 

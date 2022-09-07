@@ -9,6 +9,8 @@ import com.rldiversion.collectomania.init.BlockInit;
 import com.rldiversion.collectomania.init.ItemInit;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class ResearchTableRecipes {
     private static final ResearchTableRecipes INSTANCE = new ResearchTableRecipes();
     private final Map<ItemStack, ItemStack> researchList =  Maps.newHashMap();
@@ -28,7 +30,7 @@ public class ResearchTableRecipes {
     }
 
 
-    private void addResearchRecipe(ItemStack input1, ItemStack result, float experience, int timeToResearch)
+    private void addResearchRecipe(@Nonnull ItemStack input1, @Nonnull ItemStack result, float experience, int timeToResearch)
     {
         if(getResearchResult(input1) != ItemStack.EMPTY) return;
         this.researchList.put(input1, result);
@@ -40,10 +42,10 @@ public class ResearchTableRecipes {
     {
         for (Entry<ItemStack, ItemStack> entry : this.researchList.entrySet())
         {
-            //if(this.compareItemStacks(input1, entry.getKey())) {
+            if(this.compareItemStacks(input1, entry.getKey())) {
                 System.out.println("true getResearchResult: " + input1.getDisplayName() + "+" + entry.getValue().getDisplayName());
                 return entry.getValue();
-            //}
+            }
         }
         //System.out.println("false getResearchResult: " + input1.getDisplayName());
         return ItemStack.EMPTY;
