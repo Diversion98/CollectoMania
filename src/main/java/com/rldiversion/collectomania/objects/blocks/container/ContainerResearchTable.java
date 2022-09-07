@@ -16,6 +16,7 @@ public class ContainerResearchTable extends Container
 {
     private final TileEntityResearchTable tileEntity;
     private int researchTime;
+    private int totalResearchTime;
 
     public ContainerResearchTable(InventoryPlayer player, TileEntityResearchTable tileEntity)
     {
@@ -57,11 +58,12 @@ public class ContainerResearchTable extends Container
         super.detectAndSendChanges();
 
         for (IContainerListener listener : this.listeners) {
-            if (this.researchTime != this.tileEntity.getField(0))
-                listener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
+            if(this.researchTime != this.tileEntity.getField(0)) listener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
+            if(this.totalResearchTime != this.tileEntity.getField(1)) listener.sendWindowProperty(this, 1, this.tileEntity.getField(1));
         }
 
         this.researchTime = this.tileEntity.getField(0);
+        this.totalResearchTime = this.tileEntity.getField(1);
     }
 
     @Override
@@ -77,9 +79,9 @@ public class ContainerResearchTable extends Container
 
             if(index != 1 && index != 0)
             {
-                //Slot slot1 = this.inventorySlots.get(index + 1);
+                Slot slot1 = this.inventorySlots.get(index + 1);
 
-                if(!ResearchTableRecipes.getInstance().getResearchResult(/*slot1.getStack()*/).isEmpty())
+                if(!ResearchTableRecipes.getInstance().getResearchResult(slot1.getStack()).isEmpty())
                 {
                     if(!this.mergeItemStack(stack1, 0, 1, false))
                     {

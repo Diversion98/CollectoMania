@@ -44,7 +44,7 @@ public class GUIResearchTable extends GuiContainer
 
     private int getResearchProgressScaled()
     {
-        int i = this.tileentity.researchTime;
+        int i = this.tileentity.getField(0);
         return i != 0 ? i * 24 / 100 : 0;
     }
 }

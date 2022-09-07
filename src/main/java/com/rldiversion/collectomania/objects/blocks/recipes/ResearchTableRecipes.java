@@ -28,21 +28,30 @@ public class ResearchTableRecipes {
     }
 
 
-    public void addResearchRecipe(ItemStack input1, ItemStack result, float experience, int timeToResearch)
+    private void addResearchRecipe(ItemStack input1, ItemStack result, float experience, int timeToResearch)
     {
-        if(getResearchResult(/*input1*/) != ItemStack.EMPTY) return;
+        if(getResearchResult(input1) != ItemStack.EMPTY) return;
         this.researchList.put(input1, result);
         this.experienceList.put(result, experience);
+        System.out.println("Added recipe to list: " + this.researchList);
     }
 
-    public ItemStack getResearchResult()
+    public ItemStack getResearchResult(ItemStack input1)
     {
         for (Entry<ItemStack, ItemStack> entry : this.researchList.entrySet())
         {
-            return entry.getValue();
+            //if(this.compareItemStacks(input1, entry.getKey())) {
+                System.out.println("true getResearchResult: " + input1.getDisplayName() + "+" + entry.getValue().getDisplayName());
+                return entry.getValue();
+            //}
         }
-
+        //System.out.println("false getResearchResult: " + input1.getDisplayName());
         return ItemStack.EMPTY;
+    }
+
+    private boolean compareItemStacks(ItemStack stack1, ItemStack stack2)
+    {
+        return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
     }
 
     public float getResearchExperience()
