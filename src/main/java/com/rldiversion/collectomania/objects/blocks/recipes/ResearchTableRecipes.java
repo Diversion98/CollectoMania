@@ -35,7 +35,6 @@ public class ResearchTableRecipes {
         if(getResearchResult(input1) != ItemStack.EMPTY) return;
         this.researchList.put(input1, result);
         this.experienceList.put(result, experience);
-        System.out.println("Added recipe to list: " + this.researchList);
     }
 
     public ItemStack getResearchResult(ItemStack input1)
@@ -43,11 +42,9 @@ public class ResearchTableRecipes {
         for (Entry<ItemStack, ItemStack> entry : this.researchList.entrySet())
         {
             if(this.compareItemStacks(input1, entry.getKey())) {
-                System.out.println("true getResearchResult: " + input1.getDisplayName() + "+" + entry.getValue().getDisplayName());
                 return entry.getValue();
             }
         }
-        //System.out.println("false getResearchResult: " + input1.getDisplayName());
         return ItemStack.EMPTY;
     }
 

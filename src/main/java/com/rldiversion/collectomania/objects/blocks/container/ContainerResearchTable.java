@@ -76,12 +76,6 @@ public class ContainerResearchTable extends Container
             ItemStack stack1 = slot.getStack();
             stack = stack1.copy();
 
-            if(slotNumber == 2)
-            {
-                if(!this.mergeItemStack(stack1, 2, 37, true)) return ItemStack.EMPTY;
-                slot.onSlotChange(stack1, stack);
-            }
-
             if(slotNumber != 1 && slotNumber != 0)
             {
                 Slot slot1 = this.inventorySlots.get(slotNumber + 1);
@@ -92,17 +86,13 @@ public class ContainerResearchTable extends Container
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(slotNumber >= 2 && slotNumber < 31)
-                    {
-                        if(!this.mergeItemStack(stack1, 31, 37, false)) return ItemStack.EMPTY;
-                    }
-                    else if(slotNumber < 37 && !this.mergeItemStack(stack1, 2, 31, false))
+                    else if(slotNumber >= 2 && slotNumber < 38)
                     {
                         return ItemStack.EMPTY;
                     }
                 }
             }
-            else if(!this.mergeItemStack(stack1, 2, 37, false))
+            else if(!this.mergeItemStack(stack1, 2, 38, false))
             {
                 return ItemStack.EMPTY;
             }
@@ -115,7 +105,9 @@ public class ContainerResearchTable extends Container
                 slot.onSlotChanged();
 
             }
-            if(stack1.getCount() == stack.getCount()) return ItemStack.EMPTY;
+            if(stack1.getCount() == stack.getCount()) {
+                return ItemStack.EMPTY;
+            }
             slot.onTake(playerIn, stack1);
         }
         return stack;
