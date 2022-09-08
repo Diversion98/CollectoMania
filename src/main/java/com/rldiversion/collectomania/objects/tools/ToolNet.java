@@ -1,5 +1,6 @@
 package com.rldiversion.collectomania.objects.tools;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -18,10 +19,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import javax.annotation.Nonnull;
+
 public class ToolNet extends ItemTool implements IHasModel
 {
     private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet();
-    private String name;
 
     public ToolNet(String name, ToolMaterial material, CreativeTabs tab)
     {
@@ -34,17 +36,15 @@ public class ToolNet extends ItemTool implements IHasModel
         ItemInit.ITEMS.add(this);
     }
     @Override
-    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-        if (target.getEntityWorld().isRemote) return false;
-        if (target instanceof EntityPlayer || !target.isNonBoss() || !target.isEntityAlive()) return false;
-        if(target instanceof EntityBug) {
-            name = "collectomania:BUG_" + String.valueOf(target.getDisplayName().getUnformattedText()).toUpperCase();
-            ItemStack item = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(name)));
-            playerIn.swingArm(hand);
+    public boolean itemInteractionForEntity(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn, @Nonnull EntityLivingBase target, @Nonnull EnumHand hand) {
+        if(!target.getEntityWorld().isRemote && target instanceof EntityBug) {
+            String name = "collectomania:bug_" + target.getDisplayName().getUnformattedText();
+            ItemStack item = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(name))));
             target.setDead();
             playerIn.inventory.addItemStackToInventory(item);
             return true;
         }
+        playerIn.swingArm(hand);
         return false;
     }
 
