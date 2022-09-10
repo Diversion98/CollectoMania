@@ -30,7 +30,7 @@ public class ResearchTableRecipes {
     }
 
 
-    private void addResearchRecipe(@Nonnull ItemStack input1, @Nonnull ItemStack result, float experience, int timeToResearch)
+    private void addResearchRecipe(@Nonnull ItemStack input1, @Nonnull ItemStack result, float experience, int totalResearchTime)
     {
         if(getResearchResult(input1) != ItemStack.EMPTY) return;
         this.researchList.put(input1, result);

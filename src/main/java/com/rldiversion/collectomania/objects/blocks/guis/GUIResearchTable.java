@@ -6,29 +6,39 @@ import com.rldiversion.collectomania.util.Reference;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Objects;
 
+@SideOnly(Side.CLIENT)
 public class GUIResearchTable extends GuiContainer
 {
     private static final ResourceLocation TEXTURES = new ResourceLocation(Reference.MODID + ":textures/gui/gui_research_table.png");
-    private final InventoryPlayer player;
-    private final TileEntityResearchTable tileentity;
+    private final InventoryPlayer playerInventory;
+    private final IInventory tileResearchTable;
 
-    public GUIResearchTable(InventoryPlayer player, TileEntityResearchTable tileentity)
+    public GUIResearchTable(InventoryPlayer playerInv, IInventory researchInv)
     {
-        super(new ContainerResearchTable(player, tileentity));
-        this.player = player;
-        this.tileentity = tileentity;
+        super(new ContainerResearchTable(playerInv, researchInv));
+        this.playerInventory = playerInv;
+        this.tileResearchTable = researchInv;
+    }
+
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        String tileName = Objects.requireNonNull(this.tileentity.getDisplayName()).getUnformattedText();
+        String tileName = Objects.requireNonNull(this.tileResearchTable.getDisplayName()).getUnformattedText();
         this.fontRenderer.drawString(tileName, (this.xSize / 2 - this.fontRenderer.getStringWidth(tileName) / 2) -5, 6, 4210752);
-        this.fontRenderer.drawString(this.player.getDisplayName().getUnformattedText(), 7, this.ySize - 96 + 2, 4210752);
+        this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 7, this.ySize - 96 + 2, 4210752);
     }
 
     @Override
@@ -44,7 +54,7 @@ public class GUIResearchTable extends GuiContainer
 
     private int getResearchProgressScaled()
     {
-        int i = this.tileentity.getField(0);
+        int i = this.tileResearchTable.getField(0);
         return i != 0 ? i * 24 / 100 : 0;
     }
 }
