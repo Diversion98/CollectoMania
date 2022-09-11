@@ -312,6 +312,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
 
     public void setField(int id, int value)
     {
+        if (value != 0) value = (int) ((value / ResearchTableRecipes.getInstance().getResearchTime(this.researchItemStacks.get(0))) * 100);
         switch (id)
         {
             case 0:
