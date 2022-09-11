@@ -246,7 +246,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
 
     public int getResearchTime(ItemStack stack)
     {
-        return 100;
+        return (int) ResearchTableRecipes.getInstance().getResearchTime(stack);
     }
 
     public boolean isUsableByPlayer(@Nonnull EntityPlayer player)
