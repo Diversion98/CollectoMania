@@ -1,12 +1,11 @@
 package com.rldiversion.collectomania.objects.blocks.tileentities;
 
 import com.rldiversion.collectomania.objects.blocks.BlockResearchTable;
+import com.rldiversion.collectomania.objects.blocks.container.ContainerResearchTable;
 import com.rldiversion.collectomania.objects.blocks.recipes.ResearchTableRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
@@ -16,19 +15,18 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+
+import javax.annotation.Nonnull;
 
 public class TileEntityResearchTable extends TileEntityLockable implements ITickable, ISidedInventory
 {
     private static final int[] SLOTS_TOP = new int[] {0};
     private static final int[] SLOTS_BOTTOM = new int[] {1};
-    private String customName;
+    private String researchCustomName;
     private NonNullList<ItemStack> researchItemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
     private int researchTime;
     private int totalResearchTime = 100;
-    private ItemStack researching = ItemStack.EMPTY;
     public int getSizeInventory()
     {
         return this.researchItemStacks.size();
@@ -49,18 +47,21 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     }
 
     @Override
+    @Nonnull
     public ItemStack getStackInSlot(int index)
     {
         return this.researchItemStacks.get(index);
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize(int index, int count)
     {
         return ItemStackHelper.getAndSplit(this.researchItemStacks, index, count);
     }
 
     @Override
+    @Nonnull
     public ItemStack removeStackFromSlot(int index)
     {
         return ItemStackHelper.getAndRemove(this.researchItemStacks, index);
@@ -87,55 +88,51 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
     {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
 
-    /*@Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-    {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) this.handler;
-        return super.getCapability(capability, facing);
-    }*/
-
     @Override
+    @Nonnull
     public String getName() {
-        return null;
+        return this.hasCustomName() ? this.researchCustomName : "container.research_table";
     }
 
     public boolean hasCustomName()
     {
-        return this.customName != null && !this.customName.isEmpty();
+        return this.researchCustomName != null && !this.researchCustomName.isEmpty();
     }
 
     public void setCustomName(String customName)
     {
-        this.customName = customName;
+        this.researchCustomName = customName;
     }
 
     @Override
+    @Nonnull
     public ITextComponent getDisplayName()
     {
         return new TextComponentTranslation("container.research_table");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound)
+    public void readFromNBT(@Nonnull NBTTagCompound compound)
     {
         super.readFromNBT(compound);
         this.researchItemStacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.researchItemStacks);
-        this.researchTime = compound.getInteger("ResearchTime");
+        this.researchTime = compound.getInteger("researchTime");
         this.totalResearchTime = compound.getInteger("totalResearchTime");
-        if (compound.hasKey("CustomName", 8))
+        if (compound.hasKey("researchCustomName", 8))
         {
-            this.customName = compound.getString("CustomName");
+            this.researchCustomName = compound.getString("researchCustomName");
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    @Nonnull
+    public NBTTagCompound writeToNBT(@Nonnull NBTTagCompound compound)
     {
         super.writeToNBT(compound);
         compound.setInteger("researchTime", (short)this.researchTime);
@@ -144,7 +141,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
 
         if (this.hasCustomName())
         {
-            compound.setString("CustomName", this.customName);
+            compound.setString("researchCustomName", this.researchCustomName);
         }
         return compound;
     }
@@ -152,12 +149,6 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     public int getInventoryStackLimit()
     {
         return 64;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static boolean isResearching(TileEntityResearchTable te)
-    {
-        return te.getField(0) > 0;
     }
 
     @Override
@@ -258,7 +249,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
         return 100;
     }
 
-    public boolean isUsableByPlayer(EntityPlayer player)
+    public boolean isUsableByPlayer(@Nonnull EntityPlayer player)
     {
         if (this.world.getTileEntity(this.pos) != this)
         {
@@ -271,22 +262,23 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
 
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
 
     }
 
-    public boolean isItemValidForSlot(int index, ItemStack stack)
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack)
     {
         return index != 1;
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
+    @Nonnull
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
         if (side == EnumFacing.DOWN)
         {
             return SLOTS_BOTTOM;
@@ -295,21 +287,14 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
             return SLOTS_TOP;
     }
 
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
+    public boolean canInsertItem(int index,@Nonnull ItemStack itemStackIn,@Nonnull EnumFacing direction)
     {
         return this.isItemValidForSlot(index, itemStackIn);
     }
 
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
+    public boolean canExtractItem(int index,@Nonnull ItemStack stack, @Nonnull EnumFacing direction)
     {
-        if (direction == EnumFacing.DOWN && index == 1)
-        {
-            Item item = stack.getItem();
-
-            return item == Items.WATER_BUCKET || item == Items.BUCKET;
-        }
-
-        return true;
+        return direction == EnumFacing.DOWN && index == 1;
     }
 
     public int getField(int id)
@@ -338,10 +323,12 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     }
 
     @Override
-    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
-        return null;
+    @Nonnull
+    public Container createContainer(@Nonnull InventoryPlayer playerInventory, @Nonnull EntityPlayer playerIn) {
+        return new ContainerResearchTable(playerInventory, this);
     }
 
+    @Nonnull
     public String getGuiID()
     {
         return "collectomania:research_table";
@@ -364,7 +351,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     @SuppressWarnings("unchecked")
     @Override
     @javax.annotation.Nullable
-    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @javax.annotation.Nullable net.minecraft.util.EnumFacing facing)
+    public <T> T getCapability(@Nonnull net.minecraftforge.common.capabilities.Capability<T> capability, @javax.annotation.Nullable net.minecraft.util.EnumFacing facing)
     {
         if (facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             if (facing == EnumFacing.DOWN)
