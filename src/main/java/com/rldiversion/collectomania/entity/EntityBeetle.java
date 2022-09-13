@@ -41,4 +41,28 @@ public class EntityBeetle extends EntityBug {
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.10D);
     }
+
+    /*@Override
+    protected ResourceLocation getLootTable()
+    {
+        return LootTableHandler.CENTAUR;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound()
+    {
+        return SoundsHandler.ENTITY_CENTAUR_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source)
+    {
+        return SoundsHandler.ENTITY_CENTAUR_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound()
+    {
+        return SoundsHandler.ENTITY_CENTAUR_DEATH;
+    }*/
 }
