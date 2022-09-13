@@ -10,7 +10,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -42,7 +41,6 @@ public class Main {
 
     public static final CreativeTabs COLLECTOMANIA = new CollectomaniaTab();
     public static File config;
-    static { FluidRegistry.enableUniversalBucket(); }
 
     @EventHandler
     public static void preInit(FMLPreInitializationEvent event)
