@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ContainerResearchTable extends Container
 {
     private final IInventory tileResearchTable;
@@ -34,7 +36,7 @@ public class ContainerResearchTable extends Container
         }
     }
 
-    public void addListener(IContainerListener listener)
+    public void addListener(@Nonnull IContainerListener listener)
     {
         super.addListener(listener);
         listener.sendAllWindowProperties(this, this.tileResearchTable);
@@ -45,17 +47,12 @@ public class ContainerResearchTable extends Container
     {
         super.detectAndSendChanges();
 
-        for (int i = 0; i < this.listeners.size(); ++i)
-        {
-            IContainerListener icontainerlistener = this.listeners.get(i);
-
-            if (this.researchTime != this.tileResearchTable.getField(0))
-            {
+        for (IContainerListener icontainerlistener : this.listeners) {
+            if (this.researchTime != this.tileResearchTable.getField(0)) {
                 icontainerlistener.sendWindowProperty(this, 0, this.tileResearchTable.getField(0));
             }
 
-            if (this.totalResearchTime != this.tileResearchTable.getField(1))
-            {
+            if (this.totalResearchTime != this.tileResearchTable.getField(1)) {
                 icontainerlistener.sendWindowProperty(this, 1, this.tileResearchTable.getField(1));
             }
         }
@@ -64,20 +61,20 @@ public class ContainerResearchTable extends Container
         this.totalResearchTime = this.tileResearchTable.getField(1);
     }
 
-
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int id, int data)
     {
         this.tileResearchTable.setField(id, data);
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn)
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn)
     {
         return this.tileResearchTable.isUsableByPlayer(playerIn);
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+    @Nonnull
+    public ItemStack transferStackInSlot(@Nonnull EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -105,14 +102,14 @@ public class ContainerResearchTable extends Container
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 2 && index < 29)
+                else if (index < 29)
                 {
                     if (!this.mergeItemStack(itemstack1, 29, 38, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 29 && index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
+                else if (index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
                 {
                     return ItemStack.EMPTY;
                 }

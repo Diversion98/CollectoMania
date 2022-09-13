@@ -25,8 +25,8 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     private static final int[] SLOTS_BOTTOM = new int[] {1};
     private String researchCustomName;
     private NonNullList<ItemStack> researchItemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
-    private int researchTime;
-    private int totalResearchTime = 100;
+    private int researchTime = 0;
+    private int totalResearchTime;
     public int getSizeInventory()
     {
         return this.researchItemStacks.size();
@@ -158,25 +158,22 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
 
         if (!this.world.isRemote)
         {
-            if (!this.researchItemStacks.get(0).isEmpty())
+            if (!this.researchItemStacks.get(0).isEmpty() && this.canResearch())
             {
-                if (this.canResearch())
-                {
-                    ++this.researchTime;
+                ++this.researchTime;
 
-                    if (this.researchTime == this.totalResearchTime)
-                    {
-                        this.researchTime = 0;
-                        this.totalResearchTime = this.getResearchTime(this.researchItemStacks.get(0));
-                        this.ResearchItem();
-                        flag1 = true;
-                        BlockResearchTable.setState(true, this.world, this.pos);
-                    }
-                }
-                else
+                if (this.researchTime == this.totalResearchTime)
                 {
                     this.researchTime = 0;
+                    this.totalResearchTime = this.getResearchTime(this.researchItemStacks.get(0));
+                    this.ResearchItem();
+                    flag1 = true;
+                    BlockResearchTable.setState(true, this.world, this.pos);
                 }
+            }
+            else
+            {
+                this.researchTime = 0;
             }
         }
 
@@ -187,60 +184,42 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     }
 
     public void ResearchItem() {
-        if (this.canResearch()) {
-            ItemStack itemstack = this.researchItemStacks.get(0);
-            ItemStack itemstack1 = ResearchTableRecipes.getInstance().getResearchResult(itemstack);
-            ItemStack itemstack2 = this.researchItemStacks.get(1);
+        ItemStack itemstack = this.researchItemStacks.get(0);
+        ItemStack itemstack1 = ResearchTableRecipes.getInstance().getResearchResult(itemstack);
+        ItemStack itemstack2 = this.researchItemStacks.get(1);
 
-            if (itemstack2.isEmpty())
-            {
-                this.researchItemStacks.set(1, itemstack1.copy());
-            }
-            else if (itemstack2.getItem() == itemstack1.getItem())
-            {
-                itemstack2.grow(itemstack1.getCount());
-            }
-
-            itemstack.shrink(1);
+        if (itemstack2.isEmpty())
+        {
+            this.researchItemStacks.set(1, itemstack1.copy());
         }
+        else if (itemstack2.getItem() == itemstack1.getItem())
+        {
+            itemstack2.grow(itemstack1.getCount());
+        }
+
+        itemstack.shrink(1);
     }
 
     private boolean canResearch()
     {
-        if (this.world.isRemote) return true;
-        if ((this.researchItemStacks.get(0)).isEmpty())
+        ItemStack itemstack = ResearchTableRecipes.getInstance().getResearchResult(this.researchItemStacks.get(0));
+        ItemStack itemstack1 = this.researchItemStacks.get(1);
+
+        if (itemstack1.isEmpty())
+        {
+            return true;
+        }
+        else if (!itemstack1.isItemEqual(itemstack))
         {
             return false;
         }
+        else if (itemstack1.getCount() + itemstack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize())  // Forge fix: make furnace respect stack sizes in furnace recipes
+        {
+            return true;
+        }
         else
         {
-            ItemStack itemstack = ResearchTableRecipes.getInstance().getResearchResult(this.researchItemStacks.get(0));
-
-            if (itemstack.isEmpty())
-            {
-                return false;
-            }
-            else
-            {
-                ItemStack itemstack1 = this.researchItemStacks.get(1);
-
-                if (itemstack1.isEmpty())
-                {
-                    return true;
-                }
-                else if (!itemstack1.isItemEqual(itemstack))
-                {
-                    return false;
-                }
-                else if (itemstack1.getCount() + itemstack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize())  // Forge fix: make furnace respect stack sizes in furnace recipes
-                {
-                    return true;
-                }
-                else
-                {
-                    return itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes
-                }
-            }
+            return itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize();
         }
     }
 
