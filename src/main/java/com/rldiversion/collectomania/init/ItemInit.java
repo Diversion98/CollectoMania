@@ -2,6 +2,7 @@ package com.rldiversion.collectomania.init;
 
 import com.rldiversion.collectomania.Main;
 import com.rldiversion.collectomania.objects.items.ItemBase;
+import com.rldiversion.collectomania.objects.items.food.ItemCustomFood;
 import com.rldiversion.collectomania.objects.tools.ToolNet;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.util.EnumHelper;
@@ -23,7 +24,10 @@ public class ItemInit {
 
     //bugs
     //public static final Item BUG_NAME = new ItemBase("bug_name", Main.COLLECTOMANIA);
+    //public static final Item COOKED_NAME = new ItemCustomFood("cooked_name", Main.COLLECTOMANIA);
     public static final Item BUG_BEETLE = new ItemBase("bug_beetle", Main.COLLECTOMANIA);
+    public static final Item COOKED_BEETLE = new ItemCustomFood("cooked_beetle", 4, false);
     public static final Item BUG_LADYBUG = new ItemBase("bug_ladybug", Main.COLLECTOMANIA);
+    public static final Item COOKED_LADYBUG = new ItemCustomFood("cooked_ladybug", 4, false);
 
 }

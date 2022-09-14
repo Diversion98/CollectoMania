@@ -4,6 +4,7 @@ import com.rldiversion.collectomania.creativetabs.CollectomaniaTab;
 import com.rldiversion.collectomania.entity.EntityBeetle;
 import com.rldiversion.collectomania.entity.EntityLadybug;
 import com.rldiversion.collectomania.proxy.CommonProxy;
+import com.rldiversion.collectomania.recipes.SmeltingRecipes;
 import com.rldiversion.collectomania.util.Reference;
 import com.rldiversion.collectomania.util.handlers.RegistryHandler;
 import net.minecraft.creativetab.CreativeTabs;
@@ -52,6 +53,7 @@ public class Main {
     public static void init(FMLInitializationEvent event)
     {
         RegistryHandler.initRegistries(event);
+        SmeltingRecipes.init();
     }
 
     @EventHandler
