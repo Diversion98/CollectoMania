@@ -1,6 +1,5 @@
 package com.rldiversion.collectomania.recipes;
 
-import com.rldiversion.collectomania.init.BlockInit;
 import com.rldiversion.collectomania.init.ItemInit;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;

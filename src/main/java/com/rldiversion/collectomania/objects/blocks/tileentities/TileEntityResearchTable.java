@@ -2,7 +2,7 @@ package com.rldiversion.collectomania.objects.blocks.tileentities;
 
 import com.rldiversion.collectomania.objects.blocks.BlockResearchTable;
 import com.rldiversion.collectomania.objects.blocks.container.ContainerResearchTable;
-import com.rldiversion.collectomania.objects.blocks.recipes.ResearchTableRecipes;
+import com.rldiversion.collectomania.recipes.ResearchTableRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
