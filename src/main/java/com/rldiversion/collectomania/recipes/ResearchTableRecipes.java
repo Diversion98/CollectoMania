@@ -1,4 +1,4 @@
-package com.rldiversion.collectomania.objects.blocks.recipes;
+package com.rldiversion.collectomania.recipes;
 
 import java.util.Map;
 import java.util.Map.Entry;
