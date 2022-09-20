@@ -1,137 +1,343 @@
 package com.rldiversion.collectomania.objects.blocks.tileentities;
 
 import com.rldiversion.collectomania.objects.blocks.BlockResearchTable;
-import com.rldiversion.collectomania.objects.blocks.recipes.ResearchTableRecipes;
+import com.rldiversion.collectomania.objects.blocks.container.ContainerResearchTable;
+import com.rldiversion.collectomania.recipes.ResearchTableRecipes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
-import java.util.Objects;
+import javax.annotation.Nonnull;
 
-public class TileEntityResearchTable extends TileEntity implements ITickable
+public class TileEntityResearchTable extends TileEntityLockable implements ITickable, ISidedInventory
 {
-    int tick;
-    public ItemStackHandler handler = new ItemStackHandler(2);
-    public int researchTime;
-    private ItemStack researching = ItemStack.EMPTY;
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    private static final int[] SLOTS_TOP = new int[] {0};
+    private static final int[] SLOTS_BOTTOM = new int[] {1};
+    private String researchCustomName;
+    private NonNullList<ItemStack> researchItemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+    private int researchTime = 0;
+    private int totalResearchTime;
+    public int getSizeInventory()
     {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
-        return super.hasCapability(capability, facing);
+        return this.researchItemStacks.size();
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public boolean isEmpty()
     {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) this.handler;
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
-    {
-        super.writeToNBT(compound);
-        compound.setTag("Inventory", this.handler.serializeNBT());
-        compound.setInteger("ResearchTime", researchTime);
-        compound.setString("Name", Objects.requireNonNull(getDisplayName()).toString());
-        return compound;
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound compound)
-    {
-        super.readFromNBT(compound);
-        this.handler.deserializeNBT(compound.getCompoundTag("Inventory"));
-        this.researchTime = compound.getInteger("ResearchTime");
-        //String customName;
-        //if(compound.hasKey("Name")) customName = compound.getString("Name");
-    }
-
-    @Override
-    public void update()
-    {
-        tick++;
-        if(tick > 19) tick = 0;
-
-        //declare input to itemstack
-        ItemStack[] inputs = new ItemStack[] {handler.getStackInSlot(0)};
-
-        //if research started, set blockstate true and start research count with additional checks
-        if(researchTime > 0)
+        for (ItemStack itemstack : this.researchItemStacks)
         {
-            researchTime++;
-            BlockResearchTable.setState(true, world, pos);
-
-            //if research is done
-            if(researchTime == 100)
+            if (!itemstack.isEmpty())
             {
-                //if output slot is not empty, add 1 to the stack example: if there is allready 1 bug, add another 1 instead of making a new one
-                if(handler.getStackInSlot(1).getCount() > 0)
-                {
-                    handler.getStackInSlot(1).grow(1);
-                }
-                //else make a new item in output slot corresponding to the input slot research recipe
-                else
-                {
-                    handler.insertItem(1, researching, false);
-                }
-                //reset research
-                researching = ItemStack.EMPTY;
-                researchTime = 0;
+                return false;
             }
         }
-        //if researchTime equals 0
-        else
+
+        return true;
+    }
+
+    @Override
+    @Nonnull
+    public ItemStack getStackInSlot(int index)
+    {
+        return this.researchItemStacks.get(index);
+    }
+
+    @Override
+    @Nonnull
+    public ItemStack decrStackSize(int index, int count)
+    {
+        return ItemStackHelper.getAndSplit(this.researchItemStacks, index, count);
+    }
+
+    @Override
+    @Nonnull
+    public ItemStack removeStackFromSlot(int index)
+    {
+        return ItemStackHelper.getAndRemove(this.researchItemStacks, index);
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack)
+    {
+        ItemStack itemstack = this.researchItemStacks.get(index);
+        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        this.researchItemStacks.set(index, stack);
+
+        if (stack.getCount() > this.getInventoryStackLimit())
         {
-            //if input is not empty, set the output slot to the result of the recipe from input
-            if(!inputs[0].isEmpty())
-            {
-                ItemStack output = ResearchTableRecipes.getInstance().getResearchResult(/*inputs[0]*/);
-                //if output is not empty, researching the same as the output, add 1 to researchTime so it starts the if at the start of this update method, decrease the input slot by 1
-                if(!output.isEmpty())
-                {
-                    researching = output;
-                    researchTime++;
-                    inputs[0].shrink(1);
-                    handler.setStackInSlot(0, inputs[0]);
-                }
-            }
+            stack.setCount(this.getInventoryStackLimit());
+        }
+
+        if (index == 0 && !flag)
+        {
+            this.totalResearchTime = this.getResearchTime(stack);
+            this.researchTime = 0;
+            this.markDirty();
         }
     }
 
     @Override
+    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
+    {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    }
+
+    @Override
+    @Nonnull
+    public String getName() {
+        return this.hasCustomName() ? this.researchCustomName : "container.research_table";
+    }
+
+    public boolean hasCustomName()
+    {
+        return this.researchCustomName != null && !this.researchCustomName.isEmpty();
+    }
+
+    public void setCustomName(String customName)
+    {
+        this.researchCustomName = customName;
+    }
+
+    @Override
+    @Nonnull
     public ITextComponent getDisplayName()
     {
         return new TextComponentTranslation("container.research_table");
     }
 
-    public boolean isUsableByPlayer(EntityPlayer player)
+    @Override
+    public void readFromNBT(@Nonnull NBTTagCompound compound)
     {
-        return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
+        super.readFromNBT(compound);
+        this.researchItemStacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, this.researchItemStacks);
+        this.researchTime = compound.getInteger("researchTime");
+        this.totalResearchTime = compound.getInteger("totalResearchTime");
+        if (compound.hasKey("researchCustomName", 8))
+        {
+            this.researchCustomName = compound.getString("researchCustomName");
+        }
+    }
+
+    @Override
+    @Nonnull
+    public NBTTagCompound writeToNBT(@Nonnull NBTTagCompound compound)
+    {
+        super.writeToNBT(compound);
+        compound.setInteger("researchTime", (short)this.researchTime);
+        compound.setInteger("totalResearchTime", (short)this.totalResearchTime);
+        ItemStackHelper.saveAllItems(compound, this.researchItemStacks);
+
+        if (this.hasCustomName())
+        {
+            compound.setString("researchCustomName", this.researchCustomName);
+        }
+        return compound;
+    }
+
+    public int getInventoryStackLimit()
+    {
+        return 64;
+    }
+
+    @Override
+    public void update()
+    {
+        boolean flag1 = false;
+
+        if (!this.world.isRemote)
+        {
+            if (!this.researchItemStacks.get(0).isEmpty() && this.canResearch())
+            {
+                ++this.researchTime;
+
+                if (this.researchTime == this.totalResearchTime)
+                {
+                    this.researchTime = 0;
+                    this.totalResearchTime = this.getResearchTime(this.researchItemStacks.get(0));
+                    this.ResearchItem();
+                    flag1 = true;
+                    BlockResearchTable.setState(true, this.world, this.pos);
+                }
+            }
+            else
+            {
+                this.researchTime = 0;
+            }
+        }
+
+        if (flag1)
+        {
+            this.markDirty();
+        }
+    }
+
+    public void ResearchItem() {
+        ItemStack itemstack = this.researchItemStacks.get(0);
+        ItemStack itemstack1 = ResearchTableRecipes.getInstance().getResearchResult(itemstack);
+        ItemStack itemstack2 = this.researchItemStacks.get(1);
+
+        if (itemstack2.isEmpty())
+        {
+            this.researchItemStacks.set(1, itemstack1.copy());
+        }
+        else if (itemstack2.getItem() == itemstack1.getItem())
+        {
+            itemstack2.grow(itemstack1.getCount());
+        }
+
+        itemstack.shrink(1);
+    }
+
+    private boolean canResearch()
+    {
+        ItemStack itemstack = ResearchTableRecipes.getInstance().getResearchResult(this.researchItemStacks.get(0));
+        ItemStack itemstack1 = this.researchItemStacks.get(1);
+
+        if (itemstack1.isEmpty())
+        {
+            return true;
+        }
+        else if (!itemstack1.isItemEqual(itemstack))
+        {
+            return false;
+        }
+        else if (itemstack1.getCount() + itemstack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize())  // Forge fix: make furnace respect stack sizes in furnace recipes
+        {
+            return true;
+        }
+        else
+        {
+            return itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize();
+        }
+    }
+
+    public int getResearchTime(ItemStack stack)
+    {
+        return (int) ResearchTableRecipes.getInstance().getResearchTime(stack);
+    }
+
+    public boolean isUsableByPlayer(@Nonnull EntityPlayer player)
+    {
+        if (this.world.getTileEntity(this.pos) != this)
+        {
+            return false;
+        }
+        else
+        {
+            return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+        }
+    }
+
+    @Override
+    public void openInventory(@Nonnull EntityPlayer player) {
+
+    }
+
+    @Override
+    public void closeInventory(@Nonnull EntityPlayer player) {
+
+    }
+
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack)
+    {
+        return index != 1;
+    }
+
+    @Override
+    @Nonnull
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        if (side == EnumFacing.DOWN)
+        {
+            return SLOTS_BOTTOM;
+        }
+        else
+            return SLOTS_TOP;
+    }
+
+    public boolean canInsertItem(int index,@Nonnull ItemStack itemStackIn,@Nonnull EnumFacing direction)
+    {
+        return this.isItemValidForSlot(index, itemStackIn);
+    }
+
+    public boolean canExtractItem(int index,@Nonnull ItemStack stack, @Nonnull EnumFacing direction)
+    {
+        return direction == EnumFacing.DOWN && index == 1;
     }
 
     public int getField(int id)
     {
-        if (id == 0) {
-            return this.researchTime;
+        switch (id)
+        {
+            case 0:
+                return this.researchTime;
+            case 1:
+                return this.totalResearchTime;
+            default:
+                return 0;
         }
-        return 0;
     }
 
     public void setField(int id, int value)
     {
-        if (id == 0) {
-            this.researchTime = value;
+        if (value != 0) value = (int) ((value / ResearchTableRecipes.getInstance().getResearchTime(this.researchItemStacks.get(0))) * 100);
+        switch (id)
+        {
+            case 0:
+                this.researchTime = value;
+                break;
+            case 1:
+                this.totalResearchTime = value;
         }
+    }
+
+    @Override
+    @Nonnull
+    public Container createContainer(@Nonnull InventoryPlayer playerInventory, @Nonnull EntityPlayer playerIn) {
+        return new ContainerResearchTable(playerInventory, this);
+    }
+
+    @Nonnull
+    public String getGuiID()
+    {
+        return "collectomania:research_table";
+    }
+
+    public int getFieldCount()
+    {
+        return 2;
+    }
+
+    net.minecraftforge.items.IItemHandler handlerTop = new net.minecraftforge.items.wrapper.SidedInvWrapper(this, net.minecraft.util.EnumFacing.UP);
+    net.minecraftforge.items.IItemHandler handlerBottom = new net.minecraftforge.items.wrapper.SidedInvWrapper(this, net.minecraft.util.EnumFacing.DOWN);
+
+    @Override
+    public void clear()
+    {
+        this.researchItemStacks.clear();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @javax.annotation.Nullable
+    public <T> T getCapability(@Nonnull net.minecraftforge.common.capabilities.Capability<T> capability, @javax.annotation.Nullable net.minecraft.util.EnumFacing facing)
+    {
+        if (facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            if (facing == EnumFacing.DOWN)
+                return (T) handlerBottom;
+            else
+                return (T) handlerTop;
+        return super.getCapability(capability, facing);
     }
 }

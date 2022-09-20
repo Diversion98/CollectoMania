@@ -20,6 +20,8 @@ item.tool_brush.name=Brush
 item.bug_beetle.name=Beetle
 item.bug_ladybug.name=Ladybug
 
+item.cooked_beetle.name=Cooked Beetle
+
 //creative tabs
 itemGroup.collectomania=Collectomania
 

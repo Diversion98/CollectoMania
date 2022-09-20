@@ -8,13 +8,13 @@ import com.rldiversion.collectomania.util.ModConfiguration;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +22,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -29,6 +30,7 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
 {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool RESEARCHING = PropertyBool.create("researching");
+    private static boolean keepInventory;
 
     public BlockResearchTable(String name)
     {
@@ -43,43 +45,66 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
     }
 
     @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    @Nonnull
+    public Item getItemDropped(@Nonnull IBlockState state,@Nonnull Random rand, int fortune)
     {
         return Item.getItemFromBlock(BlockInit.RESEARCH_TABLE);
     }
 
     @Override
-    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+    @Nonnull
+    public ItemStack getItem(@Nonnull World worldIn,@Nonnull BlockPos pos,@Nonnull IBlockState state)
     {
         return new ItemStack(BlockInit.RESEARCH_TABLE);
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!worldIn.isRemote)
-        {
-            playerIn.openGui(Main.instance, ModConfiguration.GUI_RESEARCH_TABLE_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        }
+    public boolean onBlockActivated(World worldIn,@Nonnull BlockPos pos,@Nonnull IBlockState state,@Nonnull EntityPlayer playerIn,@Nonnull EnumHand hand,@Nonnull EnumFacing facing, float hitX, float hitY, float hitZ)
+    {
+        if (!worldIn.isRemote) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
 
+            if (tileentity instanceof TileEntityResearchTable) {
+                playerIn.openGui(Main.instance, ModConfiguration.GUI_RESEARCH_TABLE_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            }
+
+        }
         return true;
     }
 
-    @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+    public void onBlockAdded(@Nonnull World worldIn,@Nonnull BlockPos pos,@Nonnull IBlockState state)
     {
-        if(!worldIn.isRemote)
-        {
-            IBlockState north = worldIn.getBlockState(pos.north());
-            IBlockState south = worldIn.getBlockState(pos.south());
-            IBlockState west = worldIn.getBlockState(pos.west());
-            IBlockState east = worldIn.getBlockState(pos.east());
-            EnumFacing face = (EnumFacing)state.getValue(FACING);
+        this.setDefaultFacing(worldIn, pos, state);
+    }
 
-            if (face == EnumFacing.NORTH && north.isFullBlock() && !south.isFullBlock()) face = EnumFacing.SOUTH;
-            else if (face == EnumFacing.SOUTH && south.isFullBlock() && !north.isFullBlock()) face = EnumFacing.NORTH;
-            else if (face == EnumFacing.WEST && west.isFullBlock() && !east.isFullBlock()) face = EnumFacing.EAST;
-            else if (face == EnumFacing.EAST && east.isFullBlock() && !west.isFullBlock()) face = EnumFacing.WEST;
-            worldIn.setBlockState(pos, state.withProperty(FACING, face), 2);
+    private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
+    {
+        if (!worldIn.isRemote)
+        {
+            IBlockState iblockstate = worldIn.getBlockState(pos.north());
+            IBlockState iblockstate1 = worldIn.getBlockState(pos.south());
+            IBlockState iblockstate2 = worldIn.getBlockState(pos.west());
+            IBlockState iblockstate3 = worldIn.getBlockState(pos.east());
+            EnumFacing enumfacing = state.getValue(FACING);
+
+            if (enumfacing == EnumFacing.NORTH && iblockstate.isFullBlock() && !iblockstate1.isFullBlock())
+            {
+                enumfacing = EnumFacing.SOUTH;
+            }
+            else if (enumfacing == EnumFacing.SOUTH && iblockstate1.isFullBlock() && !iblockstate.isFullBlock())
+            {
+                enumfacing = EnumFacing.NORTH;
+            }
+            else if (enumfacing == EnumFacing.WEST && iblockstate2.isFullBlock() && !iblockstate3.isFullBlock())
+            {
+                enumfacing = EnumFacing.EAST;
+            }
+            else if (enumfacing == EnumFacing.EAST && iblockstate3.isFullBlock() && !iblockstate2.isFullBlock())
+            {
+                enumfacing = EnumFacing.WEST;
+            }
+
+            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
         }
     }
 
@@ -90,6 +115,8 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
 
         if (active) worldIn.setBlockState(pos, BlockInit.RESEARCH_TABLE.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(RESEARCHING, true), 3);
         else worldIn.setBlockState(pos, BlockInit.RESEARCH_TABLE.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(RESEARCHING, false), 3);
+
+        keepInventory = false;
 
         if(tileentity != null)
         {
@@ -118,41 +145,73 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
+    @Nonnull
+    public IBlockState getStateForPlacement(@Nonnull World world,@Nonnull BlockPos pos,@Nonnull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer,@Nonnull EnumHand hand)
     {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    public void onBlockPlacedBy(@Nonnull World worldIn,@Nonnull BlockPos pos,@Nonnull IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         worldIn.setBlockState(pos, this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+
+        if (stack.hasDisplayName())
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+
+            if (tileentity instanceof TileEntityResearchTable)
+            {
+                ((TileEntityResearchTable)tileentity).setCustomName(stack.getDisplayName());
+            }
+        }
+    }
+
+    public void breakBlock(@Nonnull World worldIn,@Nonnull BlockPos pos, @Nonnull IBlockState state)
+    {
+        if (!keepInventory)
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+
+            if (tileentity instanceof TileEntityResearchTable)
+            {
+                InventoryHelper.dropInventoryItems(worldIn, pos,(TileEntityResearchTable)tileentity);
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
+        }
+
+        super.breakBlock(worldIn, pos, state);
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
+    @Nonnull
+    public EnumBlockRenderType getRenderType(@Nonnull IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
 
     @Override
+    @Nonnull
     public IBlockState withRotation(IBlockState state, Rotation rot)
     {
-        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
+    @Nonnull
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
     {
-        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+        return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
     }
 
     @Override
+    @Nonnull
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[]{RESEARCHING, FACING});
+        return new BlockStateContainer(this, RESEARCHING, FACING);
     }
 
     @Override
+    @Nonnull
     public IBlockState getStateFromMeta(int meta)
     {
         EnumFacing facing = EnumFacing.byIndex(meta);
@@ -163,6 +222,6 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return ((EnumFacing)state.getValue(FACING)).getIndex();
+        return (state.getValue(FACING)).getIndex();
     }
 }

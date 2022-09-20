@@ -1,0 +1,12 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "collectomania:blocks/research_table_top_on",
+    "north": "collectomania:blocks/research_table_side",
+    "east": "collectomania:blocks/research_table_side",
+    "south": "collectomania:blocks/research_table_side",
+    "west": "collectomania:blocks/research_table_side",
+    "up": "collectomania:blocks/research_table_top_on",
+    "down": "collectomania:blocks/research_table_bottom"
+  }
+}
