@@ -3,11 +3,14 @@ package com.rldiversion.collectomania.objects.blocks.tileentities;
 import com.rldiversion.collectomania.objects.blocks.BlockResearchTable;
 import com.rldiversion.collectomania.objects.blocks.container.ContainerResearchTable;
 import com.rldiversion.collectomania.recipes.ResearchTableRecipes;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -16,6 +19,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,9 +30,13 @@ import java.util.Arrays;
 
 public class TileEntityResearchTable extends TileEntityLockable implements ITickable, ISidedInventory
 {
-    private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1};
+    private static final int[] slotsTop = Slots.INPUT_SLOT.slots();
+    private static final int[] slotsBottom = Slots.OUTPUT_SLOT.slots();
+    private final IItemHandler handlerTop = new SidedInvWrapper(this, EnumFacing.UP);
+    private final IItemHandler handlerBottom = new SidedInvWrapper(this, EnumFacing.DOWN);
+
     private String researchCustomName;
+
     private NonNullList<ItemStack> researchItemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
     private int researchTime = 0;
     private int totalResearchTime;
@@ -92,7 +101,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
@@ -206,25 +215,19 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
 
     private boolean canResearch()
     {
-        ItemStack itemstack = ResearchTableRecipes.getInstance().getResearchResult(this.researchItemStacks.get(0));
-        ItemStack itemstack1 = this.researchItemStacks.get(1);
+        ItemStack input = this.researchItemStacks.get(0);
+        ItemStack result = ResearchTableRecipes.getInstance().getResearchResult(input);
+        ItemStack output = this.researchItemStacks.get(Slots.OUTPUT_SLOT.slots[0]);
+        int totalAmount = output.getCount() + result.getCount();
 
-        if (itemstack1.isEmpty())
-        {
-            return true;
-        }
-        else if (!itemstack1.isItemEqual(itemstack))
-        {
+        if (input.isEmpty() || result.isEmpty())
             return false;
-        }
-        else if (itemstack1.getCount() + itemstack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize())  // Forge fix: make furnace respect stack sizes in furnace recipes
-        {
+
+        if (output.isEmpty() || output.isItemEqual(result))
             return true;
-        }
+
         else
-        {
-            return itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize();
-        }
+            return (totalAmount <= this.getInventoryStackLimit() && totalAmount <= output.getMaxStackSize());
     }
 
     public int getResearchTime(ItemStack stack)
@@ -264,20 +267,22 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     public int[] getSlotsForFace(@Nonnull EnumFacing side) {
         if (side == EnumFacing.DOWN)
         {
-            return SLOTS_BOTTOM;
+            return slotsBottom;
         }
         else
-            return SLOTS_TOP;
+            return slotsTop;
     }
 
-    public boolean canInsertItem(int index,@Nonnull ItemStack itemStackIn,@Nonnull EnumFacing direction)
+    @Override
+    public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nonnull EnumFacing direction)
     {
-        return this.isItemValidForSlot(index, itemStackIn);
+        return isItemValidForSlot(index, itemStackIn);
     }
 
-    public boolean canExtractItem(int index,@Nonnull ItemStack stack, @Nonnull EnumFacing direction)
+    @Override
+    public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction)
     {
-        return direction == EnumFacing.DOWN && index == 1;
+        return Slots.OUTPUT_SLOT.contains(index);
     }
 
     public int getField(int id)
@@ -323,9 +328,6 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
         return 2;
     }
 
-    net.minecraftforge.items.IItemHandler handlerTop = new net.minecraftforge.items.wrapper.SidedInvWrapper(this, net.minecraft.util.EnumFacing.UP);
-    net.minecraftforge.items.IItemHandler handlerBottom = new net.minecraftforge.items.wrapper.SidedInvWrapper(this, net.minecraft.util.EnumFacing.DOWN);
-
     @Override
     public void clear()
     {
@@ -363,6 +365,33 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
         public boolean contains(int i)
         {
             return ArrayUtils.contains(slots, i);
+        }
+    }
+
+    //---------------------------------------------------------------------------------------
+    //Handle Client/Server Syncing
+    //sync process when notifyBlockUpdate is called
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        NBTTagCompound compound = new NBTTagCompound();
+        writeToNBT(compound);
+        return new SPacketUpdateTileEntity(this.getPos(), 0, compound);
+    }
+
+    @Override
+    public void onDataPacket(@Nonnull NetworkManager net, SPacketUpdateTileEntity pkt)
+    {
+        readFromNBT(pkt.getNbtCompound());
+    }
+
+    public void sendUpdate()
+    {
+        if (world != null)
+        {
+            IBlockState state = world.getBlockState(pos);
+            world.notifyBlockUpdate(pos, state, state, 8);
+            markDirty();
         }
     }
 }
