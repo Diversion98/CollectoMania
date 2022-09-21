@@ -1,5 +1,6 @@
 package com.rldiversion.collectomania.objects.blocks.container;
 
+import com.rldiversion.collectomania.objects.blocks.tileentities.TileEntityResearchTable;
 import com.rldiversion.collectomania.recipes.ResearchTableRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,8 +21,9 @@ public class ContainerResearchTable extends Container
     {
         this.tileResearchTable = researchInventory;
         this.addSlotToContainer(new Slot(researchInventory, 0, 48, 35));
-        this.addSlotToContainer(new SlotFurnaceOutput(playerInventory.player, researchInventory, 1, 124, 35));
+        this.addSlotToContainer(new SlotResearchTableOutput(playerInventory.player, researchInventory, 1, 124, 35));
 
+        //player inventory slots
         for (int i = 0; i < 3; ++i)
         {
             for (int j = 0; j < 9; ++j)
@@ -30,6 +32,7 @@ public class ContainerResearchTable extends Container
             }
         }
 
+        //player hotbar slots
         for (int k = 0; k < 9; ++k)
         {
             this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
@@ -74,7 +77,7 @@ public class ContainerResearchTable extends Container
 
     @Override
     @Nonnull
-    public ItemStack transferStackInSlot(@Nonnull EntityPlayer playerIn, int index)
+    public ItemStack transferStackInSlot(@Nonnull EntityPlayer player, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -84,56 +87,28 @@ public class ContainerResearchTable extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index == 1)
-            {
-                if (!this.mergeItemStack(itemstack1, 2, 38, true))
-                {
-                    return ItemStack.EMPTY;
-                }
+            int containerSlots = inventorySlots.size() - player.inventory.mainInventory.size();
 
-                slot.onSlotChange(itemstack1, itemstack);
-            }
-            else if (index != 0)
+            if (index < containerSlots)
             {
-                if (!ResearchTableRecipes.getInstance().getResearchResult(itemstack1).isEmpty())
-                {
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
-                    {
-                        return ItemStack.EMPTY;
-                    }
-                }
-                else if (index < 29)
-                {
-                    if (!this.mergeItemStack(itemstack1, 29, 38, false))
-                    {
-                        return ItemStack.EMPTY;
-                    }
-                }
-                else if (index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
-                {
+                if (!this.mergeItemStack(itemstack1, containerSlots, inventorySlots.size(), true))
                     return ItemStack.EMPTY;
-                }
+
+                if (TileEntityResearchTable.Slots.OUTPUT_SLOT.contains(index))
+                    slot.onTake(player, itemstack);
             }
-            else if (!this.mergeItemStack(itemstack1, 2, 38, false))
-            {
+            else if (!this.mergeItemStack(itemstack1, 0, containerSlots, false))
                 return ItemStack.EMPTY;
-            }
 
             if (itemstack1.isEmpty())
-            {
                 slot.putStack(ItemStack.EMPTY);
-            }
             else
-            {
                 slot.onSlotChanged();
-            }
 
             if (itemstack1.getCount() == itemstack.getCount())
-            {
                 return ItemStack.EMPTY;
-            }
 
-            slot.onTake(playerIn, itemstack1);
+            slot.onTake(player, itemstack1);
         }
 
         return itemstack;

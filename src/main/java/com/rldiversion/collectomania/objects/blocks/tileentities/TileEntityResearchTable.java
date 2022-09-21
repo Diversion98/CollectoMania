@@ -16,8 +16,12 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class TileEntityResearchTable extends TileEntityLockable implements ITickable, ISidedInventory
 {
@@ -68,7 +72,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
+    public void setInventorySlotContents(int index, @NotNull ItemStack stack)
     {
         ItemStack itemstack = this.researchItemStacks.get(index);
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
@@ -330,7 +334,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
 
     @SuppressWarnings("unchecked")
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public <T> T getCapability(@Nonnull net.minecraftforge.common.capabilities.Capability<T> capability, @javax.annotation.Nullable net.minecraft.util.EnumFacing facing)
     {
         if (facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -339,5 +343,26 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
             else
                 return (T) handlerTop;
         return super.getCapability(capability, facing);
+    }
+
+    public enum Slots {
+        INPUT_SLOT(0), OUTPUT_SLOT(1);
+
+        private final int[] slots;
+
+        Slots(int... slots)
+        {
+            this.slots = slots;
+        }
+
+        public int[] slots()
+        {
+            return Arrays.copyOf(slots, slots.length);
+        }
+
+        public boolean contains(int i)
+        {
+            return ArrayUtils.contains(slots, i);
+        }
     }
 }

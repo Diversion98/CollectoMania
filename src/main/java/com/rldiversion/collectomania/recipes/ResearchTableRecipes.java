@@ -8,6 +8,8 @@ import com.google.common.collect.Maps;
 import com.rldiversion.collectomania.init.BlockInit;
 import com.rldiversion.collectomania.init.ItemInit;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -22,14 +24,12 @@ public class ResearchTableRecipes {
         return INSTANCE;
     }
 
-    //add research recipes
     private ResearchTableRecipes()
     {
         //addResearchRecipe(input, output, xp, time to research)
-        addResearchRecipe(new ItemStack(ItemInit.BUG_BEETLE), new ItemStack(BlockInit.RESEARCH_TABLE), 5.0F, 200);
-        addResearchRecipe(new ItemStack(ItemInit.BUG_LADYBUG), new ItemStack(BlockInit.RESEARCH_TABLE), 10.0F, 100);
+        addResearchRecipe(new ItemStack(ItemInit.BUG_BEETLE), new ItemStack(BlockInit.RESEARCH_TABLE), 0.5F, 200);
+        addResearchRecipe(new ItemStack(ItemInit.BUG_LADYBUG), new ItemStack(BlockInit.RESEARCH_TABLE), 0.5F, 100);
     }
-
 
     private void addResearchRecipe(@Nonnull ItemStack input, @Nonnull ItemStack result, float experience, int totalResearchTime)
     {
@@ -50,31 +50,24 @@ public class ResearchTableRecipes {
         return ItemStack.EMPTY;
     }
 
-    private boolean compareItemStacks(ItemStack stack1, ItemStack stack2)
+    private boolean compareItemStacks(@NotNull ItemStack stack1, @NotNull ItemStack stack2)
     {
         return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
     }
 
-    public float getSmeltingExperience(ItemStack stack)
+    public float getResearchExperience(@NotNull ItemStack stack)
     {
-        float ret = stack.getItem().getSmeltingExperience(stack);
-        if (ret != -1) return ret;
-
-        for (Entry<ItemStack, Float> entry : this.experienceList.entrySet())
+        for (ItemStack in : this.experienceList.keySet())
         {
-            if (this.compareItemStacks(stack, entry.getKey()))
-            {
-                return entry.getValue();
-            }
+            if (in.isItemEqual(stack) || (in.getItem() == stack.getItem() && in.getItemDamage() == OreDictionary.WILDCARD_VALUE))
+                return experienceList.get(in);
         }
+
         return 0.0F;
     }
 
-    public float getResearchTime(ItemStack stack)
+    public float getResearchTime(@NotNull ItemStack stack)
     {
-        float ret = stack.getItem().getSmeltingExperience(stack);
-        if (ret != -1) return ret;
-
         for (Entry<ItemStack, Integer> entry : this.researchTimeList.entrySet())
         {
             if (this.compareItemStacks(stack, entry.getKey()))
