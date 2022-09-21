@@ -19,13 +19,13 @@ public class RenderButterflyRedAdmiral extends RenderLiving<EntityButterflyRedAd
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityButterflyRedAdmiral entity)
+    protected ResourceLocation getEntityTexture(@Nonnull EntityButterflyRedAdmiral entity)
     {
         return TEXTURES;
     }
 
     @Override
-    protected void applyRotations(EntityButterflyRedAdmiral entityLiving, float p_77043_2_, float rotationYaw, float partialTicks)
+    protected void applyRotations(@Nonnull EntityButterflyRedAdmiral entityLiving, float p_77043_2_, float rotationYaw, float partialTicks)
     {
         super.applyRotations(entityLiving, p_77043_2_, rotationYaw, partialTicks);
     }

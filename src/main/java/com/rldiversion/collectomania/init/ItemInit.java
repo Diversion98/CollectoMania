@@ -13,8 +13,10 @@ import java.util.List;
 public class ItemInit {
     public static final List<Item> ITEMS = new ArrayList<>();
 
-    //tools
-    //public static final Item.ToolMaterial TOOL_NAME = EnumHelper.addToolMaterial("tool_name", int harvestLevel, int maxUses, float efficiency, float damage, int enchantability);
+    //*********************************
+    //              TOOLS
+    //*********************************
+
     public static final Item.ToolMaterial TOOL_BUGNET = EnumHelper.addToolMaterial("tool_net", 0, 59, 2.0F, 0.0F, 15);
     public static final Item.ToolMaterial TOOL_BRUSH = EnumHelper.addToolMaterial("tool_net", 0, 59, 2.0F, 0.0F, 15);
 
@@ -22,11 +24,13 @@ public class ItemInit {
     public static final Item BUGNET = new ToolNet("tool_bugnet", TOOL_BUGNET, Main.COLLECTOMANIA);
     public static final Item BRUSH = new ToolNet("tool_brush", TOOL_BRUSH, Main.COLLECTOMANIA);
 
-    //bugs
-    //public static final Item BUG_NAME = new ItemBase("bug_name", Main.COLLECTOMANIA);
-    //public static final Item COOKED_NAME = new ItemCustomFood("cooked_name", Main.COLLECTOMANIA);
+    //*********************************
+    //              BUGS
+    //*********************************
+
     public static final Item BUG_BEETLE = new ItemBase("bug_beetle", Main.COLLECTOMANIA);
     public static final Item COOKED_BEETLE = new ItemCustomFood("cooked_beetle", 4, false);
+
     public static final Item BUG_LADYBUG = new ItemBase("bug_ladybug", Main.COLLECTOMANIA);
     public static final Item COOKED_LADYBUG = new ItemCustomFood("cooked_ladybug", 4, false);
 

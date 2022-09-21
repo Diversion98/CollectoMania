@@ -8,6 +8,8 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
+import javax.annotation.Nonnull;
+
 public class ModelWorm extends ModelBase {
 	private final ModelRenderer root;
 
@@ -22,7 +24,7 @@ public class ModelWorm extends ModelBase {
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+	public void render(@Nonnull Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		root.render(f5);
 	}
 
