@@ -219,6 +219,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
         ItemStack result = ResearchTableRecipes.getInstance().getResearchResult(input);
         ItemStack output = this.researchItemStacks.get(Slots.OUTPUT_SLOT.slots[0]);
         int totalAmount = output.getCount() + result.getCount();
+        sendUpdate();
 
         if (input.isEmpty() || result.isEmpty())
             return false;
