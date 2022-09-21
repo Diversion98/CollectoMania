@@ -30,4 +30,15 @@ public class ItemInit {
     public static final Item BUG_LADYBUG = new ItemBase("bug_ladybug", Main.COLLECTOMANIA);
     public static final Item COOKED_LADYBUG = new ItemCustomFood("cooked_ladybug", 4, false);
 
+    public static final Item BUG_BUTTERFLY = new ItemBase("bug_butterfly_red_admiral", Main.COLLECTOMANIA);
+    public static final Item COOKED_BUTTERFLY = new ItemCustomFood("cooked_butterfly_red_admiral", 4, false);
+
+    public static final Item BUG_FLY = new ItemBase("bug_house_fly", Main.COLLECTOMANIA);
+    public static final Item COOKED_FLY = new ItemCustomFood("cooked_house_fly", 4, false);
+
+    public static final Item BUG_ROACH = new ItemBase("bug_roach", Main.COLLECTOMANIA);
+    public static final Item COOKED_ROACH = new ItemCustomFood("cooked_roach", 4, false);
+
+    public static final Item BUG_WORM = new ItemBase("bug_worm", Main.COLLECTOMANIA);
+    public static final Item COOKED_WORM = new ItemCustomFood("cooked_worm", 4, false);
 }

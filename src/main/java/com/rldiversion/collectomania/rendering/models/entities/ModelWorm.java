@@ -1,12 +1,17 @@
-// Made with Blockbench 4.4.1
+package com.rldiversion.collectomania.rendering.models.entities;// Made with Blockbench 4.4.1
 // Exported for Minecraft version 1.7 - 1.12
 // Paste this class into your mod and generate all required imports
 
 
-public class custom_model extends ModelBase {
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBox;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.entity.Entity;
+
+public class ModelWorm extends ModelBase {
 	private final ModelRenderer root;
 
-	public custom_model() {
+	public ModelWorm() {
 		textureWidth = 32;
 		textureHeight = 32;
 

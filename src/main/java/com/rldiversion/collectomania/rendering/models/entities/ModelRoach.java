@@ -1,9 +1,14 @@
-// Made with Blockbench 4.4.1
+package com.rldiversion.collectomania.rendering.models.entities;// Made with Blockbench 4.4.1
 // Exported for Minecraft version 1.7 - 1.12
 // Paste this class into your mod and generate all required imports
 
 
-public class custom_model extends ModelBase {
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBox;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.entity.Entity;
+
+public class ModelRoach extends ModelBase {
 	private final ModelRenderer wing_L;
 	private final ModelRenderer wing_R;
 	private final ModelRenderer bone;
@@ -18,7 +23,7 @@ public class custom_model extends ModelBase {
 	private final ModelRenderer cube_r7;
 	private final ModelRenderer cube_r8;
 
-	public custom_model() {
+	public ModelRoach() {
 		textureWidth = 32;
 		textureHeight = 32;
 

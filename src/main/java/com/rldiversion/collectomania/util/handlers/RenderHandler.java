@@ -1,9 +1,7 @@
 package com.rldiversion.collectomania.util.handlers;
 
-import com.rldiversion.collectomania.entity.EntityBeetle;
-import com.rldiversion.collectomania.entity.EntityLadybug;
-import com.rldiversion.collectomania.rendering.RenderBeetle;
-import com.rldiversion.collectomania.rendering.RenderLadybug;
+import com.rldiversion.collectomania.entity.*;
+import com.rldiversion.collectomania.rendering.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -13,22 +11,16 @@ public class RenderHandler
 {
     public static void registerEntityRenders()
     {
-        RenderingRegistry.registerEntityRenderingHandler(EntityBeetle.class, new IRenderFactory<EntityBeetle>()
-        {
-            @Override
-            public Render<? super EntityBeetle> createRenderFor(RenderManager manager)
-            {
-                return new RenderBeetle(manager);
-            }
-        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityBeetle.class, manager -> new RenderBeetle(manager));
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityLadybug.class, new IRenderFactory<EntityLadybug>()
-        {
-            @Override
-            public Render<? super EntityLadybug> createRenderFor(RenderManager manager)
-            {
-                return new RenderLadybug(manager);
-            }
-        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityLadybug.class, manager -> new RenderLadybug(manager));
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityButterflyRedAdmiral.class, manager -> new RenderButterflyRedAdmiral(manager));
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityHouseFly.class, manager -> new RenderHouseFly(manager));
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityRoach.class, manager -> new RenderRoach(manager));
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityWorm.class, manager -> new RenderWorm(manager));
     }
 }

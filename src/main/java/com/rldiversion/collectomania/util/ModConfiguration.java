@@ -10,8 +10,12 @@ public class ModConfiguration
 {
     public static Configuration config;
     public static int ENTITY_BEETLE_ID;
-    public static int GUI_RESEARCH_TABLE_ID;
     public static int ENTITY_LADYBUG_ID;
+    public static int ENTITY_BUTTERFLY_ID;
+    public static int ENTITY_FLY_ID;
+    public static int ENTITY_ROACH_ID;
+    public static int ENTITY_WORM_ID;
+    public static int GUI_RESEARCH_TABLE_ID;
 
     public static boolean All_Bugs_Spawn;
     public static boolean Beetle_Spawn;
@@ -27,6 +31,10 @@ public class ModConfiguration
         config.addCustomCategoryComment(category, "Set the ID's for the entities to ensure that they don't clash with other mod's ids");
         ENTITY_BEETLE_ID = config.getInt("ENTITY_BEETLE_ID", category, 201, 201, 999, "Entity IDs below 201 are used by Minecraft");
         ENTITY_LADYBUG_ID = config.getInt("ENTITY_LADYBUG_ID", category, 202, 201, 999, "Entity IDs below 201 are used by Minecraft");
+        ENTITY_BUTTERFLY_ID = config.getInt("ENTITY_BUTTERFLY_ID", category, 203, 201, 999, "Entity IDs below 201 are used by Minecraft");
+        ENTITY_FLY_ID = config.getInt("ENTITY_FLY_ID", category, 204, 201, 999, "Entity IDs below 201 are used by Minecraft");
+        ENTITY_ROACH_ID = config.getInt("ENTITY_ROACH_ID", category, 205, 201, 999, "Entity IDs below 201 are used by Minecraft");
+        ENTITY_WORM_ID = config.getInt("ENTITY_WORM_ID", category, 206, 201, 999, "Entity IDs below 201 are used by Minecraft");
 
         category = "GUI IDs";
         config.addCustomCategoryComment(category, "Set the ID's for the GUI's to ensure that they don't clash with other mod's ids");

@@ -19,8 +19,17 @@ item.tool_bugnet.name=Bugnet
 item.tool_brush.name=Brush
 item.bug_beetle.name=Beetle
 item.bug_ladybug.name=Ladybug
+item.bug_roach.name=Roach
+item.bug_worm.name=Worm
+item.bug_butterfly_red_admiral.name=Butterfly
+item.bug_house_fly.name=Fly
 
 item.cooked_beetle.name=Cooked Beetle
+item.cooked_ladybug.name=Cooked Ladybug
+item.cooked_roach.name=Cooked Roach
+item.cooked_worm.name=Cooked Worm
+item.cooked_buttefly_red_admiral.name=Cooked Butterfly
+item.cooked_house_fly.name=Cooked Fly
 
 //creative tabs
 itemGroup.collectomania=Collectomania
@@ -31,3 +40,7 @@ container.research_table=Research Table
 //Entities
 entity.beetle.name=Beetle
 entity.ladybug.name=Ladybug
+entity.butterfly_red_admiral.name=Red Admiral Butterfly
+entity.house_fly.name=House Fly
+entity.roach.name=Roach
+entity.worm.name=Worm
