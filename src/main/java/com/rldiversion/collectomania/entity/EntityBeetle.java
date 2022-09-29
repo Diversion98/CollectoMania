@@ -3,7 +3,6 @@ package com.rldiversion.collectomania.entity;
 import com.rldiversion.collectomania.util.handlers.LootTableHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +30,6 @@ public class EntityBeetle extends EntityBug {
     @Override
     protected void initEntityAI()
     {
-        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
         this.tasks.addTask(2, new EntityAILookIdle(this));
     }
