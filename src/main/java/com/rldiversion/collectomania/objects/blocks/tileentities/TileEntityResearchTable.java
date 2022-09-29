@@ -174,6 +174,7 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
             if (!this.researchItemStacks.get(0).isEmpty() && this.canResearch())
             {
                 ++this.researchTime;
+                BlockResearchTable.setState(true, this.world, this.pos);
 
                 if (this.researchTime == this.totalResearchTime)
                 {
@@ -181,12 +182,12 @@ public class TileEntityResearchTable extends TileEntityLockable implements ITick
                     this.totalResearchTime = this.getResearchTime(this.researchItemStacks.get(0));
                     this.ResearchItem();
                     flag1 = true;
-                    BlockResearchTable.setState(true, this.world, this.pos);
                 }
             }
             else
             {
                 this.researchTime = 0;
+                BlockResearchTable.setState(false, this.world, this.pos);
             }
         }
 

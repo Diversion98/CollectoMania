@@ -52,13 +52,6 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
     }
 
     @Override
-    @Nonnull
-    public ItemStack getItem(@Nonnull World worldIn,@Nonnull BlockPos pos,@Nonnull IBlockState state)
-    {
-        return new ItemStack(BlockInit.RESEARCH_TABLE);
-    }
-
-    @Override
     public boolean onBlockActivated(World worldIn,@Nonnull BlockPos pos,@Nonnull IBlockState state,@Nonnull EntityPlayer playerIn,@Nonnull EnumHand hand,@Nonnull EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if (!worldIn.isRemote) {
@@ -131,12 +124,6 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
         return true;
     }
 
-    @Override
-    public boolean hasTileEntity()
-    {
-        return true;
-    }
-
     @Nullable
     @Override
     public TileEntityResearchTable createTileEntity(World world, IBlockState state)
@@ -185,39 +172,11 @@ public class BlockResearchTable extends BlockTileEntity<TileEntityResearchTable>
 
     @Override
     @Nonnull
-    public EnumBlockRenderType getRenderType(@Nonnull IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
-
-    @Override
-    @Nonnull
-    public IBlockState withRotation(IBlockState state, Rotation rot)
-    {
-        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
-    }
-
-    @Override
-    @Nonnull
-    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-    {
-        return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
-    }
-
-    @Override
-    @Nonnull
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, RESEARCHING, FACING);
     }
 
-    @Override
-    @Nonnull
-    public IBlockState getStateFromMeta(int meta)
-    {
-        EnumFacing facing = EnumFacing.byIndex(meta);
-        if(facing.getAxis() == EnumFacing.Axis.Y) facing = EnumFacing.NORTH;
-        return this.getDefaultState().withProperty(FACING, facing);
-    }
 
     @Override
     public int getMetaFromState(IBlockState state)
